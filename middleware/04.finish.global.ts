@@ -1,11 +1,7 @@
-export default defineNuxtRouteMiddleware(async (to) => {
-  const app = useAppStore()
+export default defineNuxtRouteMiddleware(async () => {
+  const appStore = useAppStore()
 
-  if (!process.client) {
-    app.setClientReady()
-  }
-
-  if (!process.server) {
-    app.setServerReady()
+  if (import.meta.client) {
+    appStore.setReady()
   }
 })

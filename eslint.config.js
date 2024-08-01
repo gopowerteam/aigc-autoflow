@@ -4,6 +4,7 @@ export default antfu({
   formatters: true,
   unocss: true,
   vue: true,
+  typescript: true,
 }, {
   languageOptions: {
     globals: {

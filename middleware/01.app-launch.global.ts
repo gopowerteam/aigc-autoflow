@@ -1,24 +1,19 @@
 async function toTask1() {
 
 }
+
 async function toTask2() {
 
 }
 
 export default defineNuxtRouteMiddleware(async () => {
-  const app = useAppStore()
-  const user = useUserStore()
-  if(import.meta.server){
-    console.log('123123')
-    user.updateName('xxx')
-  }else{
-    console.log(user.name)
-  }
+  const appStore = useAppStore()
 
-  if (app.ready.server && app.ready.client) {
+  if (appStore.ready || import.meta.client) {
     return
   }
 
+  // run app luncher only when not ready and run on server
   await Promise.all([
     toTask1(),
     toTask2(),

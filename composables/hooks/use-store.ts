@@ -1,9 +1,10 @@
 import { defineStore } from 'pinia'
-import { useAppStore, useLayoutStore } from '#imports'
 
 const stores = {
   app: () => useAppStore(),
   layout: () => useLayoutStore(),
+  menu: () => useMenuStore(),
+  user: () => useUserStore(),
 }
 
 const store = defineStore('pinia', {

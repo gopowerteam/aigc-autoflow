@@ -6,6 +6,16 @@ const store = useStore()
 function request() {
 
 }
+
+definePageMeta({
+  layout: 'workspace',
+  title: '首页',
+  requireAuth: true,
+  menu: {
+    key: 'home',
+    index: 1,
+  },
+})
 </script>
 
 <template>
@@ -13,7 +23,7 @@ function request() {
     <i class="icon-park-outline:delete" />
     <i class="icon-svg:icon" />
     <AButton type="primary" @click="request">
-      123 - {{ store.app.ready.client }}
+      123 - {{ store.app.ready }}
     </AButton>
     <div v-if="!$viewport.match('mobile')">
       {{ a }} - {{ dayjs().format('YYYY') }}

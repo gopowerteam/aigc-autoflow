@@ -1,14 +1,14 @@
 import { fileURLToPath } from 'node:url'
-import { runtimeConfig } from './runtime.config'
 import ReactivityTransform from '@vue-macros/reactivity-transform/vite'
-import {breakpoints} from './package.json'
+import { runtimeConfig } from './runtime.config'
+import { breakpoints } from './package.json'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   runtimeConfig,
   devtools: {
-    enabled: true
+    enabled: true,
   },
   devServer: {
     port: 4000,
@@ -17,12 +17,19 @@ export default defineNuxtConfig({
     '@unocss/reset/normalize.css',
     '@/styles/index.scss',
   ],
+  ignore: [
+    'pages/**/components/**/*',
+  ],
+  components: [{
+    path: '~/components',
+    pathPrefix: false,
+  }],
   imports: {
     dirs: [
       'config',
       'components',
-      'components/*/index.ts',
       'components/**',
+      'components/**/*',
       'composables',
       'composables/**',
       'store',
@@ -31,15 +38,15 @@ export default defineNuxtConfig({
   },
   vite: {
     plugins: [
-      ReactivityTransform()
-    ]
+      ReactivityTransform(),
+    ],
   },
   modules: [
     ['@unocss/nuxt', {}],
     ['@pinia/nuxt', {}],
     ['@pinia-plugin-persistedstate/nuxt', {}],
-    ["nuxt-viewport", {}],
-    ["dayjs-nuxt",{}],
+    ['nuxt-viewport', {}],
+    ['dayjs-nuxt', {}],
     ['arco-design-nuxt-module', {}],
   ],
   pinia: {

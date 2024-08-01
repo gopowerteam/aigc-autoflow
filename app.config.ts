@@ -1,19 +1,14 @@
 export default defineAppConfig({
-  title: 'Admin',
+  title: 'Aigc AutoFlow',
   workspace: {
     header: {
       height: 64,
-      hover: {
-        background: '#f6f6f6',
-      },
     },
     sider: {
       width: 200,
       collapsedWidth: 65,
-      background: '#fff',
     },
     content: {
-      background: '#f5f7f9',
       padding: 20,
       header: {
         height: 40,
@@ -26,7 +21,7 @@ export default defineAppConfig({
       },
     },
     menu: {
-      mode: 'vertical',
+      mode: 'vertical' as 'vertical'|'horizontal', 
     },
   },
 })

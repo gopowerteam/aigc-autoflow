@@ -1,4 +1,4 @@
-import { defineStore } from "pinia"
+import { defineStore } from 'pinia'
 
 export interface UserState {
   accessToken: string | null
@@ -12,7 +12,7 @@ function createUserState(): UserState {
     accessToken: null,
     refreshToken: null,
     expiresIn: null,
-    name: '122'
+    name: '122',
   }
 }
 
@@ -24,10 +24,10 @@ export const useUserStore = defineStore('user', {
     },
   },
   actions: {
-    updateName(name:string){
+    updateName(name: string) {
       this.name = name
     },
-    updateToken(token: { accessToken: string; refreshToken: string; expiresIn: number }) {
+    updateToken(token: { accessToken: string, refreshToken: string, expiresIn: number }) {
       this.accessToken = token.accessToken
       this.refreshToken = token.refreshToken
       this.expiresIn = token.expiresIn

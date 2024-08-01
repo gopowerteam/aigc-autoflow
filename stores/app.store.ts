@@ -1,18 +1,12 @@
-import { defineStore } from "pinia"
+import { defineStore } from 'pinia'
 
 interface AppState {
-  ready: {
-    server: boolean
-    client: boolean
-  }
+  ready: boolean
 }
 
 function createAppState(): AppState {
   return {
-    ready: {
-      server: false,
-      client: false,
-    },
+    ready: false,
   }
 }
 
@@ -22,11 +16,8 @@ export const useAppStore = defineStore('app', {
     /**
      * 更新系统状态
      */
-    setClientReady() {
-      this.ready.client = true
-    },
-    setServerReady() {
-      this.ready.server = true
+    setReady() {
+      this.ready = true
     },
   },
 })
