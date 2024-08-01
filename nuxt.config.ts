@@ -66,4 +66,14 @@ export default defineNuxtConfig({
     },
     fallbackBreakpoint: 'desktop',
   },
+  nitro: {
+    esbuild: {
+      options: {
+        target: 'esnext',
+      },
+    },
+    experimental: {
+      openAPI: true,
+    },
+  },
 })

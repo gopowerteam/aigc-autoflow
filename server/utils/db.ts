@@ -1,9 +1,10 @@
 import { drizzle } from 'drizzle-orm/node-postgres'
-import { Client } from 'pg'
+import pg from 'pg'
+import * as schema from '~/drizzle/schema'
 
 const runtimeConfig = useRuntimeConfig()
 
-const client = new Client(runtimeConfig.database)
+const client = new pg.Client(runtimeConfig.database)
 await client.connect()
 
-export const db = drizzle(client)
+export const db = drizzle(client, { schema })
