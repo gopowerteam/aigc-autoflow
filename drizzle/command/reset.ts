@@ -3,7 +3,7 @@ import pg from 'pg'
 import { drizzle } from 'drizzle-orm/node-postgres'
 import { sql } from 'drizzle-orm'
 import { runtimeConfig } from '../../runtime.config'
-import * as schema from '../schema'
+import * as schema from '../schemas'
 
 async function createDB() {
   const client = new pg.Client(runtimeConfig.database)

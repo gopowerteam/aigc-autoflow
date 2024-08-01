@@ -3,7 +3,7 @@ import { getTableName, sql } from 'drizzle-orm'
 import type { NodePgQueryResultHKT } from 'drizzle-orm/node-postgres'
 import type { PgTransaction } from 'drizzle-orm/pg-core'
 
-import { SystemSettingSchema } from '../schema'
+import { SystemSettingSchema } from '../schemas'
 
 type TX = PgTransaction<NodePgQueryResultHKT, Record<string, never>, ExtractTablesWithRelations<Record<string, never>>>
 

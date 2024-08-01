@@ -3,7 +3,7 @@ import { runtimeConfig } from './runtime.config'
 
 export default defineConfig({
   dialect: 'postgresql',
-  schema: './drizzle/schema/index.ts',
+  schema: './drizzle/schemas/index.ts',
   out: './drizzle/migrations',
   dbCredentials: runtimeConfig.database,
 })

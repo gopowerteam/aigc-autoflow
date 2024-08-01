@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm'
 import { createInsertSchema } from 'drizzle-zod'
-import { SystemSettingSchema } from '~/drizzle/schema'
+import { SystemSettingSchema } from '~/drizzle/schemas'
 import { IdSchema } from '~/server/schemas/id.schema'
 
 const Schema = createInsertSchema(SystemSettingSchema)

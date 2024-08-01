@@ -26,5 +26,4 @@ export const SystemSettingSchema = pgTable('system_setting', pipe(
 }))
 
 export type SystemSetting = typeof SystemSettingSchema.$inferSelect
-
 export type SystemSettingInsert = typeof SystemSettingSchema.$inferInsert
