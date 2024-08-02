@@ -14,11 +14,7 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositorie
     && npm install -g pnpm@$PNPM_VERSION --registry=https://registry.npmmirror.com \
     && node --version \
     && pnpm --version
-
-
-FROM base AS prod-deps
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
-
+    
 # STEP2: 构建依赖镜像
 FROM base as build
 # -安装依赖
@@ -28,8 +24,8 @@ RUN pnpm run build
 
 # STEP4: 运行
 FROM base
-COPY --from=prod-deps /app/node_modules /app/node_modules
 COPY --from=build /app/.output /app/.output
+COPY --from=build /app/node_modules /app/node_modules
 
 ENV NODE_ENV=production
 EXPOSE 4000
