@@ -12,7 +12,9 @@
     "db:generate": "drizzle-kit generate",
     "db:push": "drizzle-kit push",
     "db:reset": "dotenv -e .env tsx drizzle/command/reset.ts",
-    "db:seed": "dotenv -e .env tsx drizzle/command/seed.ts"
+    "db:seed": "dotenv -e .env tsx drizzle/command/seed.ts",
+    "branch:create": "zx --quiet ./scripts/branch-create.mjs",
+    "branch:clean": "zx --quiet ./scripts/branch-clean.mjs"
   },
   "dependencies": {
     "@gopowerteam/form-render": "^0.0.72",
@@ -53,7 +55,8 @@
     "eslint-plugin-format": "^0.1.2",
     "sass": "^1.77.8",
     "tsx": "^4.16.5",
-    "unocss": "^0.61.9"
+    "unocss": "^0.61.9",
+    "zx": "^8.1.4"
   },
   "breakpoints": {
     "mobile": 320,

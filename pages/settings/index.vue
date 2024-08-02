@@ -24,13 +24,14 @@ const columns = defineColumns<SystemSetting>([{
 }])
 
 async function requestUpdateSetting(record: { key: string, value: string }) {
-  await $request('/api/system-seting', {
+  await $request('', {
     method: 'PUT',
     body: {
       key: record.key,
       value: record.value,
     },
   })
+
   Message.success('更新成功')
 }
 
