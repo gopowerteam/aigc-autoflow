@@ -20,6 +20,8 @@
     "@gopowerteam/form-render": "^0.0.72",
     "@gopowerteam/modal-render": "^0.0.43",
     "@gopowerteam/table-render": "^0.0.129",
+    "@langchain/core": "^0.2.19",
+    "@langchain/openai": "^0.2.5",
     "@pinia/nuxt": "^0.5.2",
     "drizzle-orm": "^0.32.1",
     "drizzle-zod": "^0.5.1",
