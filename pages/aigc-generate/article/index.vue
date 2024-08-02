@@ -12,5 +12,7 @@ definePageMeta({
 </script>
 
 <template>
-  <section />
+  <section>
+    文章管理 列表
+  </section>
 </template>
