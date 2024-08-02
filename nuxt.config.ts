@@ -80,8 +80,5 @@ export default defineNuxtConfig({
         target: 'esnext',
       },
     },
-    experimental: {
-      openAPI: true,
-    },
   },
 })

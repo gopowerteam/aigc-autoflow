@@ -15,8 +15,8 @@ importers:
         specifier: ^0.0.43
         version: 0.0.43(vue@3.4.35(typescript@5.5.4))
       '@gopowerteam/table-render':
-        specifier: ^0.0.128
-        version: 0.0.128(@arco-design/web-vue@2.56.0(vue@3.4.35(typescript@5.5.4)))(@gopowerteam/form-render@0.0.72(@arco-design/web-vue@2.56.0(vue@3.4.35(typescript@5.5.4)))(@gopowerteam/modal-render@0.0.43(vue@3.4.35(typescript@5.5.4)))(vue@3.4.35(typescript@5.5.4)))(@gopowerteam/modal-render@0.0.43(vue@3.4.35(typescript@5.5.4)))(vue@3.4.35(typescript@5.5.4))
+        specifier: ^0.0.129
+        version: 0.0.129(@arco-design/web-vue@2.56.0(vue@3.4.35(typescript@5.5.4)))(@gopowerteam/form-render@0.0.72(@arco-design/web-vue@2.56.0(vue@3.4.35(typescript@5.5.4)))(@gopowerteam/modal-render@0.0.43(vue@3.4.35(typescript@5.5.4)))(vue@3.4.35(typescript@5.5.4)))(@gopowerteam/modal-render@0.0.43(vue@3.4.35(typescript@5.5.4)))(vue@3.4.35(typescript@5.5.4))
       '@pinia/nuxt':
         specifier: ^0.5.2
         version: 0.5.2(magicast@0.3.4)(rollup@4.19.1)(typescript@5.5.4)(vue@3.4.35(typescript@5.5.4))
@@ -1124,8 +1124,8 @@ packages:
     peerDependencies:
       vue: ^3.0.0
 
-  '@gopowerteam/table-render@0.0.128':
-    resolution: {integrity: sha512-XX+6jCJ+xK3WjDdk25bVZkw5/ol0JVyoijeesSOEbDoeaT1yzvm91cpiL18vV6XWGoQSO84cHX6XQ5YBY2IfXQ==}
+  '@gopowerteam/table-render@0.0.129':
+    resolution: {integrity: sha512-C159dUf2FEDpBtjOSCPsjtSTiLXcaIg+ZzCH4u9G+QN+XgizBfCGmrSGbfy6VDCxCGZvTr8DEKHgucx+WjiInQ==}
     peerDependencies:
       '@arco-design/web-vue': ^2.55.3
       '@gopowerteam/form-render': ^0.0.72
@@ -5973,7 +5973,7 @@ snapshots:
     dependencies:
       vue: 3.4.35(typescript@5.5.4)
 
-  '@gopowerteam/table-render@0.0.128(@arco-design/web-vue@2.56.0(vue@3.4.35(typescript@5.5.4)))(@gopowerteam/form-render@0.0.72(@arco-design/web-vue@2.56.0(vue@3.4.35(typescript@5.5.4)))(@gopowerteam/modal-render@0.0.43(vue@3.4.35(typescript@5.5.4)))(vue@3.4.35(typescript@5.5.4)))(@gopowerteam/modal-render@0.0.43(vue@3.4.35(typescript@5.5.4)))(vue@3.4.35(typescript@5.5.4))':
+  '@gopowerteam/table-render@0.0.129(@arco-design/web-vue@2.56.0(vue@3.4.35(typescript@5.5.4)))(@gopowerteam/form-render@0.0.72(@arco-design/web-vue@2.56.0(vue@3.4.35(typescript@5.5.4)))(@gopowerteam/modal-render@0.0.43(vue@3.4.35(typescript@5.5.4)))(vue@3.4.35(typescript@5.5.4)))(@gopowerteam/modal-render@0.0.43(vue@3.4.35(typescript@5.5.4)))(vue@3.4.35(typescript@5.5.4))':
     dependencies:
       '@arco-design/web-vue': 2.56.0(vue@3.4.35(typescript@5.5.4))
       '@gopowerteam/form-render': 0.0.72(@arco-design/web-vue@2.56.0(vue@3.4.35(typescript@5.5.4)))(@gopowerteam/modal-render@0.0.43(vue@3.4.35(typescript@5.5.4)))(vue@3.4.35(typescript@5.5.4))
