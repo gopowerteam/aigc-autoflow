@@ -3,7 +3,7 @@ FROM alpine:3.20 as base
 # -设置环境变量
 ENV NODE_VERSION=20.13.0
 ENV PNPM_VERSION=9.6.0
-ENV NITRO_PORT=4000
+
 # -设置工作目录
 WORKDIR /app
 # -复制依赖相关目录
@@ -14,7 +14,7 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositorie
     && npm install -g pnpm@$PNPM_VERSION --registry=https://registry.npmmirror.com \
     && node --version \
     && pnpm --version
-    
+
 # STEP2: 构建依赖镜像
 FROM base as build
 # -安装依赖
@@ -27,8 +27,7 @@ FROM base
 COPY --from=build /app/.output /app/.output
 COPY --from=build /app/node_modules /app/node_modules
 
-ENV NODE_ENV=production
-EXPOSE 4000
+EXPOSE 3000
 CMD [ "npm", "run", "start" ]
 
 
