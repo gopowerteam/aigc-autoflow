@@ -80,5 +80,14 @@ export default defineNuxtConfig({
         target: 'esnext',
       },
     },
+    storage: {
+      memory: {
+        driver: 'memory',
+      },
+      redis: {
+        driver: 'redis',
+        ...runtimeConfig.redis,
+      },
+    },
   },
 })

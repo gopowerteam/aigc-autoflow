@@ -9,14 +9,20 @@ export const runtimeConfig = {
     database: process.env.DATABASE_DB,
     ssl: false,
   },
+  redis: {
+    host: process.env.REDIS_HOST,
+    port: process.env.REDIS_PORT,
+    password: process.env.REDIS_PASSWORD,
+    db: process.env.REDIS_DB,
+  },
   auth: {
     accessToken: {
       secret: process.env.AUTH_ACCESS_TOKEN_SECRET,
-      expiresIn: process.env.AUTH_ACCESS_TOKEN_EXPIRES_IN,
+      expires: process.env.AUTH_ACCESS_TOKEN_EXPIRES,
     },
     refreshToken: {
       secret: process.env.AUTH_REFRESH_TOKEN_SECRET,
-      expiresIn: process.env.AUTH_REFRESH_TOKEN_EXPIRES_IN,
+      expires: process.env.AUTH_REFRESH_TOKEN_EXPIRES,
     },
   },
 } as const

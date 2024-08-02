@@ -1,8 +1,8 @@
 import type { NitroFetchRequest, AvailableRouterMethod as _AvailableRouterMethod } from 'nitropack'
 import type { FetchContext, FetchError, FetchResponse } from 'ofetch'
+import { useFetch } from 'nuxt/app'
 import type { AsyncData, KeysOf, PickFrom } from '#app/composables/asyncData'
 import type { FetchResult, UseFetchOptions } from '#app/composables/fetch'
-import { useFetch } from 'nuxt/app'
 
 type AvailableRouterMethod<R extends NitroFetchRequest> = Uppercase<_AvailableRouterMethod<R>>
 

@@ -36,7 +36,7 @@ async function requestUpdateSetting(record: { key: string, value: string }) {
 }
 
 const onTableLoad = defineTableLoad(async ({ update }) => {
-  const data = await $request('/api/system-seting', { method: 'GET' })
+  const data = await $request('/api/system-setting', { method: 'GET' })
   update(data)
 })
 

@@ -3,16 +3,14 @@ import { defineStore } from 'pinia'
 export interface UserState {
   accessToken: string | null
   refreshToken: string | null
-  expiresIn: number | null
-  name: string
+  expires: number | null
 }
 
 function createUserState(): UserState {
   return {
     accessToken: null,
     refreshToken: null,
-    expiresIn: null,
-    name: '122',
+    expires: null,
   }
 }
 
@@ -24,21 +22,18 @@ export const useUserStore = defineStore('user', {
     },
   },
   actions: {
-    updateName(name: string) {
-      this.name = name
-    },
-    updateToken(token: { accessToken: string, refreshToken: string, expiresIn: number }) {
+    updateToken(token: { accessToken: string, refreshToken: string, expires: number }) {
       this.accessToken = token.accessToken
       this.refreshToken = token.refreshToken
-      this.expiresIn = token.expiresIn
+      this.expires = token.expires
     },
     logout() {
       this.accessToken = null
       this.refreshToken = null
-      this.expiresIn = null
+      this.expires = null
     },
   },
   persist: {
-    paths: ['accessToken', 'refreshToken', 'expiresIn'],
+    paths: ['accessToken', 'refreshToken', 'expires'],
   },
 })

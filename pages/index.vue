@@ -1,7 +1,6 @@
 <script setup lang="ts">
 const a = $ref(12345)
 const dayjs = useDayjs()
-const store = useStore()
 
 function request() {
 
@@ -23,7 +22,7 @@ definePageMeta({
     <i class="icon-park-outline:delete" />
     <i class="icon-svg:icon" />
     <AButton type="primary" @click="request">
-      123 - {{ store.app.ready }}
+      button
     </AButton>
     <div v-if="!$viewport.match('mobile')">
       {{ a }} - {{ dayjs().format('YYYY') }}
