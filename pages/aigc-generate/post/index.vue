@@ -4,7 +4,7 @@ definePageMeta({
   title: '文章管理',
   requireAuth: true,
   menu: {
-    key: 'article',
+    key: 'post',
     path: ['aigc-generate'],
     index: 1,
   },

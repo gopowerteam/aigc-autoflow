@@ -8,13 +8,21 @@ import type { BaseMessageChunk } from '@langchain/core/messages'
 interface LangChainOptions {
   modelName: string
   temperature: number
+  AIApiKey: string
+  AIApiURL: string
 }
 
 export class LangChainService {
   private llm: BaseChatModel<BaseFunctionCallOptions, BaseMessageChunk>
 
   constructor(options: LangChainOptions) {
-    this.llm = new ChatOpenAI(options)
+    this.llm = new ChatOpenAI({
+      modelName: options.modelName,
+      temperature: options.temperature,
+    }, {
+      apiKey: options.AIApiKey,
+      baseURL: options.AIApiURL,
+    })
   }
 
   invoke(promptTemplate: string, input: Record<string, string>) {
