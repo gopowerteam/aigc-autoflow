@@ -1,5 +1,5 @@
 {
-  "name": "nuxt-app",
+  "name": "aigc-autoflow",
   "type": "module",
   "private": true,
   "packageManager": "pnpm@9.6.0+sha512.38dc6fba8dba35b39340b9700112c2fe1e12f10b17134715a4aa98ccf7bb035e76fd981cf0bb384dfa98f8d6af5481c2bef2f4266a24bfa20c34eb7147ce0b5e",
@@ -14,7 +14,8 @@
     "db:reset": "dotenv -e .env tsx drizzle/command/reset.ts",
     "db:seed": "dotenv -e .env tsx drizzle/command/seed.ts",
     "branch:create": "zx --quiet ./scripts/branch-create.mjs",
-    "branch:clean": "zx --quiet ./scripts/branch-clean.mjs"
+    "branch:clean": "zx --quiet ./scripts/branch-clean.mjs",
+    "start": "node .output/server/index.mjs"
   },
   "dependencies": {
     "@gopowerteam/form-render": "^0.0.72",
