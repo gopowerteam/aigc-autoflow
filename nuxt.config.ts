@@ -1,5 +1,7 @@
-import { fileURLToPath } from 'node:url'
+import components from 'unplugin-vue-components/vite'
 import ReactivityTransform from '@vue-macros/reactivity-transform/vite'
+import { TableRenderResolver } from '@gopowerteam/table-render'
+import { FormRenderResolver } from '@gopowerteam/form-render'
 import { runtimeConfig } from './runtime.config'
 import { breakpoints } from './package.json'
 
@@ -39,6 +41,12 @@ export default defineNuxtConfig({
   vite: {
     plugins: [
       ReactivityTransform(),
+      components({
+        resolvers: [
+          TableRenderResolver(),
+          FormRenderResolver(),
+        ],
+      }),
     ],
   },
   modules: [
@@ -72,8 +80,14 @@ export default defineNuxtConfig({
         target: 'esnext',
       },
     },
-    experimental: {
-      openAPI: true,
+    storage: {
+      memory: {
+        driver: 'memory',
+      },
+      redis: {
+        driver: 'redis',
+        ...runtimeConfig.redis,
+      },
     },
   },
 })

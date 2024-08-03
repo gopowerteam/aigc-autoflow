@@ -6,22 +6,25 @@
 //   updatedAt DateTime            @default(now()) @updatedAt
 // }
 
-import { boolean, pgEnum, pgTable, text } from 'drizzle-orm/pg-core'
+import { pgEnum, pgTable, text } from 'drizzle-orm/pg-core'
 import { pipe } from '../utils/pipe'
 import { SchemaWithID, SchemaWithTime } from '../fields'
+import { toPgEnum } from '../utils/to-pg-enum'
 
-export const SystemSettingFieldsEnum = pgEnum('system_setting_fields', [
-  'AdminUsername',
-  'AdminPassword',
-  'AIApiURL',
-  'AIApiKey',
-])
+export enum SystemSettingFieldsEnum {
+  AdminUsername = 'AdminUsername',
+  AdminPassword = 'AdminPassword',
+  AIApiURL = 'AIApiURL',
+  AIApiKey = 'AIApiKey',
+}
+
+const SystemSettingFields = pgEnum('system_setting_fields', toPgEnum(SystemSettingFieldsEnum))
 
 export const SystemSettingSchema = pgTable('system_setting', pipe(
   SchemaWithID,
   SchemaWithTime,
 )({
-  key: SystemSettingFieldsEnum('key').unique().notNull(),
+  key: SystemSettingFields('key').unique().notNull(),
   value: text('value').notNull(),
 }))
 
