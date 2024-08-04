@@ -9,10 +9,10 @@ definePageMeta({
   title: '批次管理',
   requireAuth: true,
   name: 'batch-list',
-  menu: {
-    path: ['aigc-generate'],
-    index: 1,
-  },
+  // menu: {
+  //   path: ['aigc-generate'],
+  //   index: 1,
+  // },
 })
 
 function toCreate() {

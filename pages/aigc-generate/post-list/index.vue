@@ -12,7 +12,7 @@ definePageMeta({
   menu: {
     key: 'post-list',
     path: ['aigc-generate'],
-    index: 1,
+    index: 2,
   },
 })
 

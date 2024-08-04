@@ -3,7 +3,7 @@ definePageMeta({
   layout: 'workspace',
   title: '新增批次',
   requireAuth: true,
-  name: 'batch-create',
+  // name: 'batch-create',
 })
 
 const form = reactive({
