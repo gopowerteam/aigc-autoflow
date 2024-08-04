@@ -1,4 +1,9 @@
-<script setup lang="ts">
+<script setup lang="tsx">
+import { defineColumns, defineTableLoad } from '@gopowerteam/table-render'
+import { Input } from '@arco-design/web-vue'
+import { SystemSettingFieldsDict } from '@/config/dict.config'
+import type { Batch } from '@/drizzle/schemas'
+
 definePageMeta({
   layout: 'workspace',
   title: '批次管理',
@@ -16,37 +21,48 @@ function toCreate() {
   })
 }
 
-const columns = [
-  {
-    title: '分类',
-    dataIndex: 'category',
-  },
-  {
-    title: '标题',
-    dataIndex: 'title',
-  },
-]
-const data = reactive([{
-  key: '1',
-  category: '最新资讯',
-  title: [
-    '特朗普的耳朵真的受伤真假？',
-  ],
+const columns = defineColumns<Batch>([{
+  key: 'tasks',
+  title: '任务名称',
+  render: r => r.render(record => <Input v-model={record.tasks}></Input>),
 }, {
-  key: '2',
-  category: '陈年往事',
-  title: [
-    '1949年新中国成立的他们在干什么？',
-    '2008年奥运会他们都去干这件事！',
-  ],
+  key: 'createdAt',
+  title: '创建时间',
+  render: r => r.date(),
+}, {
+  key: 'updatedAt',
+  title: '修改时间',
+  render: r => r.date(),
+}, {
+  key: 'completed',
+  title: '状态',
+  render: r => r.text(),
+}, {
+  key: 'action',
+  title: '操作',
+  render: r => r.button([{
+    content: '更新',
+    onClick(record) {
+      return requestUpdateTask(record)
+    },
+  }]),
 }])
 
-const expandable = reactive({
-  title: 'Expand',
-  width: 80,
-  expandedRowRender: (record: any) => {
-    return record.title.join('<br>')
-  },
+async function requestUpdateTask(record: Batch) {
+  // await $request(`/api/prompt/${record.id}`, {
+  //   method: 'PUT',
+  //   body: {
+  //     id: record.id,
+  //     tasks: record.tasks!,
+  //   },
+  // })
+
+  // Message.success('更新成功')
+}
+
+const onTableLoad = defineTableLoad(async ({ update }) => {
+  const data = await $request('/api/prompt', { method: 'GET' })
+  update(data)
 })
 </script>
 
@@ -56,7 +72,7 @@ const expandable = reactive({
       <a-button type="primary" class="mb-4" @click="toCreate">
         新建批次
       </a-button>
-      <a-table :columns="columns" :data="data" :expandable="expandable" />
+      <TableRender :columns="columns" :data-load="onTableLoad" row-key="id" />
     </div>
   </section>
 </template>
