@@ -19,8 +19,8 @@ export class LangChainService {
     this.llm = new ChatOpenAI({
       modelName: options.modelName,
       temperature: options.temperature,
-    }, {
       apiKey: options.AIApiKey,
+    }, {
       baseURL: options.AIApiURL,
     })
   }
