@@ -37,6 +37,20 @@ export default defineNuxtConfig({
       'store',
       'server/utils/**',
     ],
+    presets: [
+      {
+        from: '@gopowerteam/form-render',
+        imports: ['defineForm', 'useForm'],
+      },
+      {
+        from: '@gopowerteam/table-render',
+        imports: ['defineColumns', 'defineTableLoad', 'useTable'],
+      },
+      {
+        from: '@gopowerteam/modal-render',
+        imports: ['useModal'],
+      },
+    ],
   },
   vite: {
     plugins: [

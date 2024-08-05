@@ -1,9 +1,12 @@
 <script setup lang="ts">
+import { ModalProvider } from '@gopowerteam/modal-render'
 </script>
 
 <template>
   <NuxtRouteAnnouncer />
   <NuxtLayout>
-    <NuxtPage />
+    <ModalProvider>
+      <NuxtPage />
+    </ModalProvider>
   </NuxtLayout>
 </template>

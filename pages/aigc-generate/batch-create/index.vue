@@ -3,7 +3,7 @@ definePageMeta({
   layout: 'workspace',
   title: '新增批次',
   requireAuth: true,
-  name: 'batch-create',
+  // name: 'batch-create',
 })
 
 const form = reactive({
@@ -13,7 +13,7 @@ const form = reactive({
 
 const rules = {
   category: [{ required: true, message: '请输入分类名称' }],
-  password: [{ required: true, type: 'array', message: '请输入文章标题' }],
+  title: [{ required: true, type: 'array', message: '请输入文章标题' }],
 }
 
 const formRef = ref()

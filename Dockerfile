@@ -26,6 +26,7 @@ RUN pnpm run build
 FROM base
 COPY --from=build /app/.output /app/.output
 COPY --from=build /app/node_modules /app/node_modules
+RUN rm -rf .env
 
 EXPOSE 3000
 CMD [ "npm", "run", "start" ]
