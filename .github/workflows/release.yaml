@@ -23,6 +23,11 @@ jobs:
           username: ${{secrets.DOCKERHUB_USERNAME}}
           password: ${{secrets.DOCKERHUB_TOKEN}}
 
+      - name: 'Create env file'
+        run: |
+          touch .env
+          echo ${{ env.API_KEY }} >> .env
+
       - name: build and push docker image to registry
         uses: docker/build-push-action@v5
         with:
