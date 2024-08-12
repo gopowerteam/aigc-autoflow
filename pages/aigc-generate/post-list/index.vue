@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import { defineColumns, defineTableLoad } from '@gopowerteam/table-render'
-import { Input } from '@arco-design/web-vue'
+import { FormRender } from '@gopowerteam/form-render'
 import { SystemSettingFieldsDict } from '@/config/dict.config'
 import type { Post } from '@/drizzle/schemas'
 
@@ -15,6 +15,8 @@ definePageMeta({
     index: 2,
   },
 })
+
+const postTable = ref(null)
 
 const columns = defineColumns<Post>([{
   key: 'title',
@@ -78,23 +80,52 @@ async function requestDelete(record: Post) {
 }
 
 const onTableLoad = defineTableLoad(async ({ update }) => {
-  // const data = await $request('/api/post', { method: 'GET' })
-  const data = [
-    {
-      id: '123',
-      createdAt: '2024-05-10 12:01:32',
-      updatedAt: '2024-05-10 12:01:32',
-      title: '天空中出现这道光的时候必定会？',
-      content: 'balabala,balabala,balabala,balabala,balabala,balabala',
-      tags: ['奇异事件', '八卦'],
-    },
-  ]
+  const data = await $request('/api/post', { method: 'GET' })
   update(data)
 })
 
+const modal = useModal()
+
+const form2 = defineForm<Post>([
+  {
+    key: 'title',
+    title: '文章标题',
+    rule: [{ required: true, message: '请输入文章标题' }],
+    render: r => r.input(),
+  },
+  {
+    key: 'tag',
+    title: '标签',
+    rule: [{ required: true, message: '请选择关键词标签' }],
+    render: r => r.select({
+      multiple: true,
+      options: async () => {
+        const data = await $request('/api/prompt/tags', { method: 'get' })
+        const map = new Map()
+        data.tags.forEach((item) => {
+          map.set(item, item)
+        })
+        return map
+      },
+    }),
+  },
+])
+
 function toCreate() {
-  navigateTo({
-    path: '/aigc-generate/post-create',
+  modal.open(() => <FormRender form={form2} layout="vertical" submitable={true}></FormRender>, {
+    onSubmit: async (data: Post) => {
+      await $request('/api/post', {
+        method: 'post',
+        body: data,
+      })
+      modal.close()
+      Message.success('增加成功')
+      postTable.value.reload()
+    },
+    onCancel: modal.close,
+  }, {
+    title: '新增文章规则',
+    size: 'small',
   })
 }
 </script>
@@ -105,7 +136,7 @@ function toCreate() {
       <a-button type="primary" class="mb-4" @click="toCreate">
         新建文章
       </a-button>
-      <TableRender :columns="columns" :data-load="onTableLoad" row-key="id" />
+      <TableRender ref="postTable" :columns="columns" :data-load="onTableLoad" row-key="id" />
     </div>
   </section>
 </template>

@@ -4,7 +4,6 @@ import { FormRender } from '@gopowerteam/form-render'
 import type { Prompt } from '@/drizzle/schemas'
 
 const promptTable = ref(null)
-
 const form2 = defineForm<Prompt>([
   {
     key: 'tag',
@@ -53,7 +52,7 @@ const columns = defineColumns<Prompt>([{
   key: 'action',
   title: '操作',
   render: r => r.button([{
-    content: '更新',
+    content: '编辑',
     onClick(record) {
       // 错误的useTable，需要使用ref
       promptTable.value.edit({
@@ -67,6 +66,15 @@ const columns = defineColumns<Prompt>([{
         Message.success('更新成功')
       })
     },
+  }, {
+    content: '删除',
+    onClick(record) {
+      // ?
+      // await $request(`/api/prompt`, {
+
+      // })
+      // Message.success('更新成功')
+    },
   }]),
 }])
 
@@ -77,20 +85,23 @@ const onTableLoad = defineTableLoad(async ({ update }) => {
 
 const modal = useModal()
 
-function onCreate(data) {
-  console.log(data)
-}
-
 function onAddClick() {
-  // Bug layout 不起作用
-  modal.open(() => <FormRender form={form2} layout="vertical" footer onSubmit={onCreate}></FormRender>, {
-    onOk: () => {
-      console.log('OK') // TODO foot的确定按钮回调事件定义
+  modal.open(() => <FormRender form={form2} layout="vertical" submitable={true}></FormRender>, {
+    onSubmit: async (data: any) => {
+      await $request('/api/prompt', {
+        method: 'POST',
+        body: data,
+      })
+      modal.close()
+      Message.success('增加成功')
+      promptTable.value.reload()
+    },
+    onCancel: () => {
+      modal.close()
     },
   }, {
-    title: '弹窗组件',
+    title: '新规则信息',
     size: 'small',
-    footer: true,
   })
 }
 </script>
