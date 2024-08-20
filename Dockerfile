@@ -9,9 +9,11 @@ WORKDIR /app
 # -复制依赖相关目录
 COPY . .
 # 安装基础包
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories \
-    && apk add --no-cache nodejs npm python3 curl gcc g++ make linux-headers \
-    && npm install -g pnpm@$PNPM_VERSION --registry=https://registry.npmmirror.com \
+# RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories \
+#     && apk add --no-cache nodejs npm python3 curl gcc g++ make linux-headers \
+#     && npm install -g pnpm@$PNPM_VERSION --registry=https://registry.npmmirror.com \
+RUN apk add --no-cache nodejs npm python3 curl gcc g++ make linux-headers \
+    && npm install -g pnpm@$PNPM_VERSION \
     && node --version \
     && pnpm --version
 
