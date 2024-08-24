@@ -8,7 +8,6 @@ definePageMeta({
   layout: 'workspace',
   title: '文章列表',
   requireAuth: true,
-
   menu: {
     key: 'post-list',
     path: ['aigc-generate'],
@@ -16,7 +15,7 @@ definePageMeta({
   },
 })
 
-const postTable = ref(null)
+const table = useTable('table')
 
 const columns = defineColumns<Post>([{
   key: 'title',
@@ -27,6 +26,14 @@ const columns = defineColumns<Post>([{
   render: r => r.tag({
     formatter: r => r.tags || [],
   }),
+}, {
+  key: 'length',
+  title: '字数',
+  render: r => r.text(record => record.content.length),
+}, {
+  key: 'content',
+  title: '内容',
+  collapsed: true,
 }, {
   key: 'createdAt',
   title: '修改时间',
@@ -40,9 +47,13 @@ const columns = defineColumns<Post>([{
   title: '操作',
   render: r => r.button([
     {
-      content: '生成',
+      content: '查看',
       onClick(record) {
-        return requestGenerate(record)
+        table.value.preview({
+          key: record.id,
+          record,
+          title: record.title,
+        })
       },
     },
     {
@@ -55,23 +66,23 @@ const columns = defineColumns<Post>([{
   ),
 }])
 
-async function requestGenerate(record: Post) {
-  await $request('/api/post/generate', {
-    body: {
-      id: record.id,
-    },
-  })
+// async function requestGenerate(record: Post) {
+//   await $request('/api/post/generate', {
+//     body: {
+//       id: record.id,
+//     },
+//   })
 
-  Message.success('生成成功')
-  setTimeout(() => {
-    navigateTo({
-      path: '/aigc-generate/post-info',
-      query: {
-        id: record.id,
-      },
-    })
-  }, 1000)
-}
+//   Message.success('生成成功')
+//   setTimeout(() => {
+//     navigateTo({
+//       path: '/aigc-generate/post-info',
+//       query: {
+//         id: record.id,
+//       },
+//     })
+//   }, 1000)
+// }
 
 async function requestDelete(record: Post) {
   await $request(`/api/post/${record.id}`, { method: 'DELETE' })
@@ -83,60 +94,15 @@ const onTableLoad = defineTableLoad(async ({ update }) => {
   const data = await $request('/api/post', { method: 'GET' })
   update(data)
 })
-
-const modal = useModal()
-
-const form2 = defineForm<Post>([
-  {
-    key: 'title',
-    title: '文章标题',
-    rule: [{ required: true, message: '请输入文章标题' }],
-    render: r => r.input(),
-  },
-  {
-    key: 'tag',
-    title: '标签',
-    rule: [{ required: true, message: '请选择关键词标签' }],
-    render: r => r.select({
-      multiple: true,
-      options: async () => {
-        const data = await $request('/api/prompt/tags', { method: 'get' })
-        const map = new Map()
-        data.tags.forEach((item) => {
-          map.set(item, item)
-        })
-        return map
-      },
-    }),
-  },
-])
-
-function toCreate() {
-  modal.open(() => <FormRender form={form2} layout="vertical" submitable={true}></FormRender>, {
-    onSubmit: async (data: Post) => {
-      await $request('/api/post', {
-        method: 'post',
-        body: data,
-      })
-      modal.close()
-      Message.success('增加成功')
-      postTable.value.reload()
-    },
-    onCancel: modal.close,
-  }, {
-    title: '新增文章规则',
-    size: 'small',
-  })
-}
 </script>
 
 <template>
-  <section>
-    <div class="mb-4 text-right">
-      <a-button type="primary" class="mb-4" @click="toCreate">
+  <PageContainer>
+    <template #actions>
+      <a-button type="primary" @click="() => navigateTo('/aigc-generate/post-create')">
         新建文章
       </a-button>
-      <TableRender ref="postTable" :columns="columns" :data-load="onTableLoad" row-key="id" />
-    </div>
-  </section>
+    </template>
+    <TableRender ref="table" :columns="columns" :data-load="onTableLoad" row-key="id" />
+  </PageContainer>
 </template>

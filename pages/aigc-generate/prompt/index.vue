@@ -3,8 +3,8 @@ import { defineColumns, defineTableLoad } from '@gopowerteam/table-render'
 import { FormRender } from '@gopowerteam/form-render'
 import type { Prompt } from '@/drizzle/schemas'
 
-const promptTable = ref(null)
-const form2 = defineForm<Prompt>([
+const table = useTable('table')
+const form = defineForm<Prompt>([
   {
     key: 'tag',
     title: '标签',
@@ -53,27 +53,34 @@ const columns = defineColumns<Prompt>([{
   title: '操作',
   render: r => r.button([{
     content: '编辑',
-    onClick(record) {
-      // 错误的useTable，需要使用ref
-      promptTable.value.edit({
+    async onClick(record) {
+      const data = await table.value.edit({
         record,
-        form: form2,
-      }).then(async (data) => {
-        await $request(`/api/prompt/${record.id}`, {
-          method: 'PUT',
-          body: data,
-        })
-        Message.success('更新成功')
+        form,
       })
+
+      await $request(`/api/prompt/:id`, {
+        params: {
+          id: record.id,
+        },
+        method: 'PUT',
+        body: data,
+      })
+
+      Message.success('更新成功')
     },
   }, {
     content: '删除',
-    onClick(record) {
-      // ?
-      // await $request(`/api/prompt`, {
+    confirm: true,
+    async onClick(record) {
+      await $request(`/api/prompt/:id`, {
+        params: {
+          id: record.id,
+        },
+        method: 'DELETE',
+      })
 
-      // })
-      // Message.success('更新成功')
+      Message.success('更新成功')
     },
   }]),
 }])
@@ -86,18 +93,20 @@ const onTableLoad = defineTableLoad(async ({ update }) => {
 const modal = useModal()
 
 function onAddClick() {
-  modal.open(() => <FormRender form={form2} layout="vertical" submitable={true}></FormRender>, {
+  const { close } = modal.open(FormRender, {
+    form,
+    submitable: true,
     onSubmit: async (data: any) => {
       await $request('/api/prompt', {
         method: 'POST',
         body: data,
       })
-      modal.close()
+      close()
       Message.success('增加成功')
-      promptTable.value.reload()
+      table.value.reload()
     },
     onCancel: () => {
-      modal.close()
+      close()
     },
   }, {
     title: '新规则信息',
@@ -107,15 +116,14 @@ function onAddClick() {
 </script>
 
 <template>
-  <section>
-    <TableRender ref="promptTable" :columns="columns" :data-load="onTableLoad" row-key="id">
-      <template #actions>
-        <AButton type="primary" @click="onAddClick">
-          增加规则
-        </AButton>
-      </template>
-    </TableRender>
-  </section>
+  <PageContainer>
+    <template #actions>
+      <AButton type="primary" @click="onAddClick">
+        增加规则
+      </AButton>
+    </template>
+    <TableRender ref="table" :columns="columns" :data-load="onTableLoad" row-key="id" />
+  </PageContainer>
 </template>
 
 <style lang="less" scoped></style>
