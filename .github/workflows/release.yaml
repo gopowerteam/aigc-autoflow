@@ -16,14 +16,14 @@ jobs:
       - name: Get package info
         id: package
         uses: codex-team/action-nodejs-package-info@v1.1
-  
+
       - name: login to docker registry
         uses: docker/login-action@v3
         with:
           username: ${{secrets.DOCKERHUB_USERNAME}}
           password: ${{secrets.DOCKERHUB_TOKEN}}
 
-      - name: 'Create env file'
+      - name: Create env file
         run: |
           touch .env
           echo -e "${{ vars.ENV }}" >> .env
@@ -35,7 +35,7 @@ jobs:
           context: .
           push: true
           tags: ${{secrets.DOCKERHUB_USERNAME}}/${{steps.package.outputs.name}}:latest
-         
+
       - name: webhook
         run: |
           curl -X GET \
@@ -43,4 +43,3 @@ jobs:
           -H "Container: ${{steps.package.outputs.name}}" \
           -H "Authorization: ${{secrets.PANEL_TOKEN}}" \
           ${{secrets.PANEL_WEBHOOK}}
-      

@@ -3,6 +3,6 @@
 
 <template>
   <section>
-    header
+    <!-- header -->
   </section>
 </template>
