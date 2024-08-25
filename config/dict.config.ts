@@ -12,3 +12,8 @@ export const SystemSettingFieldsDict = new Map<SystemSettingFieldsEnum | string,
   [SystemSettingFieldsEnum.AIApiURL, 'AIGC API 地址'],
   [SystemSettingFieldsEnum.AIApiKey, 'AIGC API Key'],
 ])
+
+export const ComplatedDict = new Map([
+  [true, '已完成'],
+  [false, '未完成'],
+])

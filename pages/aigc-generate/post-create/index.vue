@@ -71,7 +71,7 @@ async function onCreate() {
       <a-button form="post" type="primary" html-type="submit">
         保存
       </a-button>
-      <a-button>
+      <a-button @click="() => $router.back()">
         取消
       </a-button>
     </template>

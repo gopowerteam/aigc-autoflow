@@ -15,7 +15,12 @@ const form = defineForm<Prompt>([
     key: 'template',
     title: '模板内容',
     rule: [{ required: true, message: '请输入模板内容' }],
-    render: r => r.textarea(),
+    render: r => r.textarea({
+      autosize: {
+        minRows: 10,
+        maxRows: 20,
+      },
+    }),
   },
 ])
 

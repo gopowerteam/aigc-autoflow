@@ -1,7 +1,5 @@
 <script setup lang="tsx">
 import { defineColumns, defineTableLoad } from '@gopowerteam/table-render'
-import { Input } from '@arco-design/web-vue'
-import { SystemSettingFieldsDict } from '@/config/dict.config'
 import type { Batch } from '@/drizzle/schemas'
 
 definePageMeta({
@@ -9,22 +7,24 @@ definePageMeta({
   title: '批次管理',
   requireAuth: true,
   name: 'batch-list',
-  // menu: {
-  //   path: ['aigc-generate'],
-  //   index: 1,
-  // },
+  menu: {
+    key: 'batch-list',
+    path: ['aigc-generate'],
+    index: 3,
+  },
 })
 
-function toCreate() {
-  navigateTo({
-    path: '/aigc-generate/batch-create',
-  })
+function onCreate() {
+  navigateTo('/aigc-generate/batch-create')
 }
 
 const columns = defineColumns<Batch>([{
+  key: 'id',
+  title: '批次ID',
+}, {
   key: 'tasks',
-  title: '任务名称',
-  render: r => r.render(record => <Input v-model={record.tasks}></Input>),
+  title: '任务数',
+  render: r => r.text(record => record.tasks.length),
 }, {
   key: 'createdAt',
   title: '创建时间',
@@ -36,43 +36,23 @@ const columns = defineColumns<Batch>([{
 }, {
   key: 'completed',
   title: '状态',
-  render: r => r.text(),
-}, {
-  key: 'action',
-  title: '操作',
-  render: r => r.button([{
-    content: '更新',
-    onClick(record) {
-      return requestUpdateTask(record)
-    },
-  }]),
+  render: r => r.dict(ComplatedDict),
 }])
 
-async function requestUpdateTask(record: Batch) {
-  // await $request(`/api/prompt/${record.id}`, {
-  //   method: 'PUT',
-  //   body: {
-  //     id: record.id,
-  //     tasks: record.tasks!,
-  //   },
-  // })
-
-  // Message.success('更新成功')
-}
-
 const onTableLoad = defineTableLoad(async ({ update }) => {
-  const data = await $request('/api/prompt', { method: 'GET' })
-  update(data)
+  return $request('/api/batch', { method: 'GET' }).then((data) => {
+    update(data)
+  })
 })
 </script>
 
 <template>
-  <section>
-    <div class="mb-4 text-right">
-      <a-button type="primary" class="mb-4" @click="toCreate">
+  <PageContainer>
+    <template #actions>
+      <AButton type="primary" @click="onCreate">
         新建批次
-      </a-button>
-      <TableRender :columns="columns" :data-load="onTableLoad" row-key="id" />
-    </div>
-  </section>
+      </AButton>
+    </template>
+    <TableRender :columns="columns" :data-load="onTableLoad" row-key="id" />
+  </PageContainer>
 </template>
