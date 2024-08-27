@@ -26,13 +26,17 @@ export class LangChainService {
   }
 
   invoke(promptTemplate: string, input: Record<string, string>) {
-    // Create Parse
-    const parser = new StringOutputParser()
-    // Create Prompt
-    const prompt = ChatPromptTemplate.fromTemplate(promptTemplate)
-    // Create Chain
-    const chain = prompt.pipe(this.llm).pipe(parser)
-
-    return chain.invoke(input)
+    try {
+      // Create Parse
+      const parser = new StringOutputParser()
+      // Create Prompt
+      const prompt = ChatPromptTemplate.fromTemplate(promptTemplate)
+      // Create Chain
+      const chain = prompt.pipe(this.llm).pipe(parser)
+      return chain.invoke(input)
+    }
+    catch (ex) {
+      console.error(ex)
+    }
   }
 }

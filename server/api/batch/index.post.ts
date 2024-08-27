@@ -21,4 +21,6 @@ export default defineAuthEventHandler(async (event) => {
       batchId: batch.id,
     })),
   )
+
+  $fetch('/api/task/runner', { method: 'POST' })
 })

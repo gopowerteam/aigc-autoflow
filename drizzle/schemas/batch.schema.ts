@@ -3,7 +3,6 @@ import { boolean, pgTable, text } from 'drizzle-orm/pg-core'
 import { relations } from 'drizzle-orm'
 import { pipe } from '../utils/pipe'
 import { SchemaWithID, SchemaWithTime } from '../fields'
-import type { InferResultType } from '../utils/infer-result-type.js'
 import { TaskSchema } from './task.schema'
 
 export const BatchSchema = pgTable('batch', pipe(
@@ -19,7 +18,7 @@ export const BatchRelations = relations(BatchSchema, ({ many }) => ({
 
 // export type Batch = typeof BatchSchema.$inferSelect
 
-export type Batch = InferResultType<'BatchSchema', { tasks: true }>
+export type Batch = InferSchemaType<'BatchSchema', { tasks: true }>
 
 export const CreateBatchSchema = createInsertSchema(BatchSchema)
 export const SelectBatchSchema = createSelectSchema(BatchSchema)
