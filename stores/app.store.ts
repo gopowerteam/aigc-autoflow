@@ -1,4 +1,3 @@
-import { defineStore } from 'pinia'
 
 interface AppState {
   ready: boolean

@@ -1,4 +1,3 @@
-import { defineStore } from 'pinia'
 
 export interface UserState {
   accessToken: string | null
@@ -34,6 +33,6 @@ export const useUserStore = defineStore('user', {
     },
   },
   persist: {
-    paths: ['accessToken', 'refreshToken', 'expires'],
+    pick: ['accessToken', 'refreshToken', 'expires'],
   },
 })

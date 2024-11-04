@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { FieldRule } from '@arco-design/web-vue'
 
+const { $viewport } = useNuxtApp()
 const user = useUserStore()
 const loginModel = $ref({
   username: '',

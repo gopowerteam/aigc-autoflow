@@ -1,4 +1,3 @@
-import { defineStore } from 'pinia'
 
 interface MenuState {
   headerMenus: PageMenu[]

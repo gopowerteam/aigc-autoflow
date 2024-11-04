@@ -1,6 +1,8 @@
 <script setup lang="ts">
+const { $viewport } = useNuxtApp()
 const { workspace } = useAppConfig()
 const store = useStore()
+const route= useRoute()
 
 function onMenuItemClick(path: string) {
   navigateTo(path)
@@ -15,7 +17,7 @@ function onMenuItemClick(path: string) {
       auto-open
       class="sider-menu inset-0 absolute!"
       :collapsed-width="workspace.sider.collapsedWidth"
-      :default-selected-keys="[$route.path]"
+      :default-selected-keys="[route.path]"
       :mode="workspace.menu.mode"
       router
       :show-collapse-button="$viewport.match('desktop')"

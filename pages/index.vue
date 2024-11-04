@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const a = $ref(12345)
+const { $viewport } = useNuxtApp()
 const dayjs = useDayjs()
 
 function request() {
@@ -26,7 +27,7 @@ definePageMeta({
     </AButton>
     <div v-if="!$viewport.match('mobile')">
       {{ a }} - {{ dayjs().format('YYYY') }}
-      {{ a }} - {{ $dayjs().format('YYYY') }}
+      {{ a }} - {{ dayjs().format('YYYY') }}
     </div>
   </div>
 </template>
