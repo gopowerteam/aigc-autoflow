@@ -1,5 +1,5 @@
-@import './default.scss';
-@import './vars.scss';
+@use 'default.scss';
+@use 'vars.scss';
 
 @import url('@arco-design/web-vue/lib/modal/style/index.css');
 @import url('@arco-design/web-vue/lib/message/style/index.css');

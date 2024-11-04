@@ -1,9 +1,9 @@
-import components from 'unplugin-vue-components/vite'
-import ReactivityTransform from '@vue-macros/reactivity-transform/vite'
-import { TableRenderResolver } from '@gopowerteam/table-render'
 import { FormRenderResolver } from '@gopowerteam/form-render'
-import { runtimeConfig } from './runtime.config'
+import { TableRenderResolver } from '@gopowerteam/table-render'
+import ReactivityTransform from '@vue-macros/reactivity-transform/vite'
+import components from 'unplugin-vue-components/vite'
 import { breakpoints } from './package.json'
+import { runtimeConfig } from './runtime.config'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -53,6 +53,13 @@ export default defineNuxtConfig({
     ],
   },
   vite: {
+    css: {
+      preprocessorOptions: {
+        scss: {
+          api: 'modern-compiler',
+        },
+      },
+    },
     plugins: [
       ReactivityTransform(),
       components({
