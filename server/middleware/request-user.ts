@@ -15,7 +15,6 @@ export default defineEventHandler(async (event) => {
   }
 
   const token = getAccessTokenByHeader(event)
-
   if (!token) {
     return
   }

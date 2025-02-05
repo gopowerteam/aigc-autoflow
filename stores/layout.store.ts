@@ -1,4 +1,3 @@
-
 interface LayoutState {
   sider: {
     collapsed: boolean
@@ -19,7 +18,7 @@ function createLayoutState(): LayoutState {
   }
 }
 
-export const useLayoutStore =  defineStore('layout', {
+export const useLayoutStore = defineStore('layout', {
   state: createLayoutState,
   actions: {
     /**

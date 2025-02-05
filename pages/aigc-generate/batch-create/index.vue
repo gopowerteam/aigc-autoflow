@@ -2,7 +2,7 @@
 import type { FieldRule } from '@arco-design/web-vue'
 
 const { data } = await useRequest('/api/prompt/tags')
-
+const formId = useId()
 definePageMeta({
   layout: 'workspace',
   title: '创建批次',
@@ -40,14 +40,14 @@ async function onCreate() {
 <template>
   <PageContainer>
     <template #actions>
-      <a-button form="batch" type="primary" html-type="submit">
+      <a-button :form="formId" type="primary" html-type="submit">
         创建
       </a-button>
       <a-button @click="() => $router.back()">
         取消
       </a-button>
     </template>
-    <a-form v-id:form="'batch'" :model="form" :rules="rules" :style="{ width: '600px' }" @submit-success="onCreate">
+    <a-form :id="formId" :model="form" :rules="rules" :style="{ width: '600px' }" @submit-success="onCreate">
       <a-form-item field="prompt" tooltip="内容将含有与关键词相关的信息" label="关键词">
         <a-select
           v-model="form.prompt"

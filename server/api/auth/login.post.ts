@@ -28,7 +28,7 @@ export default defineEventHandler(async (event) => {
   if (!isUsernameExist || !isPasswrodExist) {
     throw createError({
       statusCode: 401,
-      statusMessage: 'Unauthorized',
+      statusMessage: '登录失败, 用户名或密码错误',
     })
   }
 

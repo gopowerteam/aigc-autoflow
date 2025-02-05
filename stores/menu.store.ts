@@ -1,4 +1,3 @@
-
 interface MenuState {
   headerMenus: PageMenu[]
   siderMenus: PageMenu[]

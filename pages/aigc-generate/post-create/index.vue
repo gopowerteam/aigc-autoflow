@@ -2,7 +2,7 @@
 import type { FieldRule } from '@arco-design/web-vue'
 
 const { data } = await useRequest('/api/prompt/tags')
-
+const formId = useId()
 definePageMeta({
   layout: 'workspace',
   title: '新增文章',
@@ -68,14 +68,14 @@ async function onCreate() {
           </ADoption>
         </template>
       </ADropdown>
-      <a-button form="post" type="primary" html-type="submit">
+      <a-button :form="formId" type="primary" html-type="submit">
         保存
       </a-button>
       <a-button @click="() => $router.back()">
         取消
       </a-button>
     </template>
-    <a-form v-id:form="'post'" :model="form" :rules="rules" :style="{ width: '600px' }" @submit-success="onCreate">
+    <a-form :id="formId" :model="form" :rules="rules" :style="{ width: '600px' }" @submit-success="onCreate">
       <a-form-item field="title" label="文章标题" tooltip="文章内容的将按照标题进行生成">
         <a-input v-model="form.title" placeholder="请输入标题名称" allow-clear />
       </a-form-item>

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 const { workspace } = useAppConfig()
-const store = useStore()
+const { sider } = useLayoutStore()
 </script>
 
 <template>
@@ -11,7 +11,7 @@ const store = useStore()
     <ALayout id="layout-container">
       <ALayoutSider
         class="relative"
-        :collapsed="store.layout.sider.collapsed"
+        :collapsed="sider.collapsed"
         :collapsed-width="workspace.sider.collapsedWidth"
         :width="workspace.sider.width"
       >

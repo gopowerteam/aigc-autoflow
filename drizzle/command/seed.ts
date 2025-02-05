@@ -1,8 +1,8 @@
 import process from 'node:process'
-import pg from 'pg'
 import { drizzle } from 'drizzle-orm/node-postgres'
-import * as seeds from '../seeds'
+import pg from 'pg'
 import { runtimeConfig } from '../../runtime.config'
+import * as seeds from '../seeds'
 
 async function createDB() {
   const client = new pg.Client(runtimeConfig.database)

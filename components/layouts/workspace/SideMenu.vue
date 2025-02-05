@@ -1,8 +1,10 @@
 <script setup lang="ts">
 const { $viewport } = useNuxtApp()
 const { workspace } = useAppConfig()
-const store = useStore()
-const route= useRoute()
+const { sider } = useLayoutStore()
+const { siderMenus } = useMenuStore()
+
+const route = useRoute()
 
 function onMenuItemClick(path: string) {
   navigateTo(path)
@@ -12,7 +14,7 @@ function onMenuItemClick(path: string) {
 <template>
   <section>
     <AMenu
-      v-model:collapsed="store.layout.sider.collapsed"
+      v-model:collapsed="sider.collapsed"
       :accordion="$viewport.match('desktop')"
       auto-open
       class="sider-menu inset-0 absolute!"
@@ -23,7 +25,7 @@ function onMenuItemClick(path: string) {
       :show-collapse-button="$viewport.match('desktop')"
       @menu-item-click="onMenuItemClick"
     >
-      <MenuItem v-for="menu in store.menu.siderMenus" :key="menu.key" :menu="menu" />
+      <MenuItem v-for="menu in siderMenus" :key="menu.key" :menu="menu" />
     </AMenu>
   </section>
 </template>

@@ -7,8 +7,12 @@ import { runtimeConfig } from './runtime.config'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: '2024-04-03',
+  compatibilityDate: '2025-02-05',
   runtimeConfig,
+  sourcemap: {
+    server: true,
+    client: true,
+  },
   devtools: {
     enabled: true,
   },

@@ -1,5 +1,5 @@
-import { shake } from 'radash'
 import MenuConfig from '@/config/menu.config'
+import { shake } from 'radash'
 
 async function generateUserMenus() {
   const menuStore = useMenuStore()

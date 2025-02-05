@@ -1,4 +1,3 @@
-
 interface AppState {
   ready: boolean
 }
