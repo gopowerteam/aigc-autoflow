@@ -1,7 +1,7 @@
 <script lang="tsx" setup>
-import { defineColumns, defineTableLoad } from '@gopowerteam/table-render'
-import { FormRender } from '@gopowerteam/form-render'
 import type { Prompt } from '@/drizzle/schemas'
+import { FormRender } from '@gopowerteam/form-render'
+import { defineColumns, defineTableLoad } from '@gopowerteam/table-render'
 
 const table = useTable('table')
 const form = defineForm<Prompt>([

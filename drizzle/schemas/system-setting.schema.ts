@@ -7,8 +7,8 @@
 // }
 
 import { pgEnum, pgTable, text } from 'drizzle-orm/pg-core'
-import { pipe } from '../utils/pipe'
 import { SchemaWithID, SchemaWithTime } from '../fields'
+import { pipe } from '../utils/pipe'
 import { toPgEnum } from '../utils/to-pg-enum'
 
 export enum SystemSettingFieldsEnum {

@@ -1,5 +1,5 @@
-import { nanoid } from 'nanoid'
 import * as pg from 'drizzle-orm/pg-core'
+import { nanoid } from 'nanoid'
 
 export function SchemaWithNanoID<T>(columns: T) {
   return {

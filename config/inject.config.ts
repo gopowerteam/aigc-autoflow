@@ -1,4 +1,4 @@
-import { defineInjectKey } from "../composables/defines/define-inject-key";
+import { defineInjectKey } from '../composables/defines/define-inject-key'
 
 export const injectKeys = {
   workspace: {

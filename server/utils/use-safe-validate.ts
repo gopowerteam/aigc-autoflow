@@ -1,5 +1,5 @@
-import type { UnknownKeysParam, z } from 'zod'
 import type { H3Event } from 'h3'
+import type { UnknownKeysParam, z } from 'zod'
 import { useSafeValidatedBody, useSafeValidatedParams, useSafeValidatedQuery } from 'h3-zod'
 
 type Schema<U extends UnknownKeysParam = any> = z.ZodObject<any, U> | z.ZodUnion<[Schema<U>, ...Schema<U>[]]> | z.ZodIntersection<Schema<U>, Schema<U>> | z.ZodDiscriminatedUnion<string, z.ZodObject<any, U>[]> | z.ZodEffects<z.ZodTypeAny>

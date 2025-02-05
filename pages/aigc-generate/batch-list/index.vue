@@ -1,6 +1,6 @@
 <script setup lang="tsx">
-import { defineColumns, defineTableLoad } from '@gopowerteam/table-render'
 import type { Batch } from '@/drizzle/schemas'
+import { defineColumns, defineTableLoad } from '@gopowerteam/table-render'
 
 definePageMeta({
   layout: 'workspace',

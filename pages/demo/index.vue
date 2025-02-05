@@ -1,8 +1,8 @@
 <script setup lang="tsx">
+import FormDemo from './components/form-demo.vue'
 import IconDemo from './components/icon-demo.vue'
 import ModalDemo from './components/modal-demo.vue'
 import TableDemo from './components/table-demo.vue'
-import FormDemo from './components/form-demo.vue'
 
 definePageMeta({
   layout: 'workspace',

@@ -2,8 +2,8 @@ import { relations } from 'drizzle-orm'
 import { boolean, pgTable, text } from 'drizzle-orm/pg-core'
 import { SchemaWithID, SchemaWithTime } from '../fields'
 import { pipe } from '../utils/pipe'
-import { PromptSchema } from './prompt.schema'
 import { BatchSchema } from './batch.schema'
+import { PromptSchema } from './prompt.schema'
 
 export const TaskSchema = pgTable('task', pipe(
   SchemaWithID,

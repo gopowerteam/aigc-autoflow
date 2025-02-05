@@ -1,5 +1,5 @@
-import { UserRole } from './enum.config'
 import { SystemSettingFieldsEnum } from '~/drizzle/schemas'
+import { UserRole } from './enum.config'
 
 export const UserRoleDict = new Map([
   [UserRole.Admin, '管理员'],

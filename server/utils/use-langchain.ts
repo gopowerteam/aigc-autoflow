@@ -1,7 +1,7 @@
 import { inArray } from 'drizzle-orm'
-import { objectify, select } from 'radash'
-import { LangChainService } from '../api/langchain'
+import { objectify } from 'radash'
 import { SystemSettingFieldsEnum, SystemSettingSchema } from '~/drizzle/schemas'
+import { LangChainService } from '../services/langchain'
 
 export async function useLangchain() {
   const settings = await db.query.SystemSettingSchema.findMany({

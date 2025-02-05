@@ -1,8 +1,8 @@
 <script lang="tsx" setup>
-import { defineColumns, defineTableLoad } from '@gopowerteam/table-render'
-import { Input } from '@arco-design/web-vue'
-import { SystemSettingFieldsDict } from '@/config/dict.config'
 import type { SystemSetting } from '@/drizzle/schemas'
+import { SystemSettingFieldsDict } from '@/config/dict.config'
+import { Input } from '@arco-design/web-vue'
+import { defineColumns, defineTableLoad } from '@gopowerteam/table-render'
 
 const columns = defineColumns<SystemSetting>([{
   key: 'key',

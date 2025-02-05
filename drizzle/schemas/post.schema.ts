@@ -1,6 +1,6 @@
 import { pgTable, text } from 'drizzle-orm/pg-core'
-import { pipe } from '../utils/pipe'
 import { SchemaWithID, SchemaWithTime } from '../fields'
+import { pipe } from '../utils/pipe'
 
 export const PostSchema = pgTable('post', pipe(
   SchemaWithID,

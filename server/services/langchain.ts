@@ -1,9 +1,9 @@
 import type { BaseFunctionCallOptions } from '@langchain/core/language_models/base'
 import type { BaseChatModel } from '@langchain/core/language_models/chat_models'
-import { ChatOpenAI } from '@langchain/openai'
+import type { BaseMessageChunk } from '@langchain/core/messages'
 import { StringOutputParser } from '@langchain/core/output_parsers'
 import { ChatPromptTemplate } from '@langchain/core/prompts'
-import type { BaseMessageChunk } from '@langchain/core/messages'
+import { ChatOpenAI } from '@langchain/openai'
 
 interface LangChainOptions {
   modelName: string
@@ -19,9 +19,10 @@ export class LangChainService {
     this.llm = new ChatOpenAI({
       modelName: options.modelName,
       temperature: options.temperature,
-      apiKey: options.AIApiKey,
-    }, {
-      baseURL: options.AIApiURL,
+      configuration: {
+        apiKey: options.AIApiKey,
+        baseURL: options.AIApiURL,
+      },
     })
   }
 

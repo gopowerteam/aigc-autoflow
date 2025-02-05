@@ -40,9 +40,9 @@ function onSubmit(data: any) {
     </ACard>
     <ACard title="页脚提交表单">
       <FormRender
-        footer
+
         :form="form"
-        submitable
+        submitable footer
         @submit="onSubmit"
       />
     </ACard>

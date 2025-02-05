@@ -144,11 +144,7 @@ async function onLogin() {
     left: 50%;
     min-width: 300vw;
     min-height: 300vw;
-    background: linear-gradient(
-      60deg,
-      rgba(84, 58, 183, 1) 0%,
-      rgba(0, 172, 193, 1) 100%
-    );
+    background: linear-gradient(60deg, rgba(84, 58, 183, 1) 0%, rgba(0, 172, 193, 1) 100%);
     animation: rotate 15s cubic-bezier(0.55, 0.5, 0.45, 0.5) infinite;
 
     @for $i from 1 to 5 {

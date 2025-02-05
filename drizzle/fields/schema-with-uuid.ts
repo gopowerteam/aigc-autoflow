@@ -1,5 +1,5 @@
-import * as pg from 'drizzle-orm/pg-core'
 import { sql } from 'drizzle-orm'
+import * as pg from 'drizzle-orm/pg-core'
 
 export function SchemaWithUUID<T>(columns: T) {
   return {

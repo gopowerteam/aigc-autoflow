@@ -1,6 +1,5 @@
-import { desc, eq } from 'drizzle-orm'
-import { createSelectSchema } from 'drizzle-zod'
-import { PostSchema, TaskSchema } from '~/drizzle/schemas'
+import { desc } from 'drizzle-orm'
+import { TaskSchema } from '~/drizzle/schemas'
 import { defineAuthEventHandler } from '~/server/utils/define-auth-event-handler'
 
 // const QuerySchema = createSelectSchema(TaskSchema).partial()

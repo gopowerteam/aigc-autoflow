@@ -1,7 +1,5 @@
-import { createInsertSchema } from 'drizzle-zod'
 import { z } from 'h3-zod'
-import { title } from 'radash'
-import { BatchSchema, PostSchema, TaskSchema } from '~/drizzle/schemas'
+import { BatchSchema, TaskSchema } from '~/drizzle/schemas'
 import { defineAuthEventHandler } from '~/server/utils/define-auth-event-handler'
 
 const BodySchema = z.object({

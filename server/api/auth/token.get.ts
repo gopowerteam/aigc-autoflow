@@ -1,5 +1,5 @@
-import { z } from 'h3-zod'
 import type { JwtPayload } from 'jsonwebtoken'
+import { z } from 'h3-zod'
 import jwt from 'jsonwebtoken'
 import { REDIS_REFRESH_TOKEN } from '~/config/constant.config'
 

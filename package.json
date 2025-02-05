@@ -12,6 +12,7 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
+    "lint:eslint": "eslint \"./**/*.{vue,ts,tsx}\" --fix",
     "db:generate": "drizzle-kit generate",
     "db:push": "drizzle-kit push",
     "db:reset": "dotenv -e .env tsx drizzle/command/reset.ts",

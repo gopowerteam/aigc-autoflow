@@ -1,3 +1,4 @@
+import type { SignOptions } from 'jsonwebtoken'
 import dayjs from 'dayjs'
 import jwt from 'jsonwebtoken'
 import { REDIS_REFRESH_TOKEN } from '~/config/constant.config'
@@ -11,7 +12,7 @@ export function createUserToken(id: string) {
       secret,
       {
         expiresIn,
-      },
+      } as SignOptions,
     )
   }
 

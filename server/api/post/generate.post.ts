@@ -1,5 +1,4 @@
 import { eq } from 'drizzle-orm'
-import { createInsertSchema } from 'drizzle-zod'
 import { z } from 'h3-zod'
 import { PromptSchema } from '~/drizzle/schemas'
 import { defineAuthEventHandler } from '~/server/utils/define-auth-event-handler'

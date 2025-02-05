@@ -1,8 +1,6 @@
 <script setup lang="tsx">
-import { defineColumns, defineTableLoad } from '@gopowerteam/table-render'
-import { FormRender } from '@gopowerteam/form-render'
-import { SystemSettingFieldsDict } from '@/config/dict.config'
 import type { Post } from '@/drizzle/schemas'
+import { defineColumns, defineTableLoad } from '@gopowerteam/table-render'
 
 definePageMeta({
   layout: 'workspace',

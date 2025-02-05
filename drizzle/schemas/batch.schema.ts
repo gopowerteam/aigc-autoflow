@@ -1,8 +1,8 @@
-import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
-import { boolean, pgTable, text } from 'drizzle-orm/pg-core'
 import { relations } from 'drizzle-orm'
-import { pipe } from '../utils/pipe'
+import { boolean, pgTable } from 'drizzle-orm/pg-core'
+import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
 import { SchemaWithID, SchemaWithTime } from '../fields'
+import { pipe } from '../utils/pipe'
 import { TaskSchema } from './task.schema'
 
 export const BatchSchema = pgTable('batch', pipe(
