@@ -78,15 +78,8 @@ async function generateUserMenus() {
   menuStore.updateSiderMenus(data)
 }
 
-export default defineNuxtRouteMiddleware(async () => {
-  const appStore = useAppStore()
-
-  if (appStore.ready || import.meta.client) {
-    return
-  }
-
-  // run app luncher only when not ready and run on server
+export async function userLaunch() {
   await Promise.all([
     generateUserMenus(),
   ])
-})
+}
