@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import menus from '@/config/menu.config'
 
-const slots = useSlots()
+// const slots = useSlots()
 const route = useRoute()
 
-const showHeader = $computed(() => {
-  return !!slots.actions
-})
+// const showHeader = $computed(() => {
+//   return !!slots.actions
+// })
 
 const routes = computed(() => {
   const [current, ...items] = route.path.split('/').filter(Boolean).reverse()
@@ -26,7 +26,7 @@ const routes = computed(() => {
 
 <template>
   <section class="space-y-4">
-    <div v-if="showHeader" class="page-header flex items-center justify-between">
+    <div class="page-header flex items-center justify-between">
       <div>
         <ABreadcrumb :routes="routes" />
       </div>
@@ -34,6 +34,7 @@ const routes = computed(() => {
         <slot name="actions" />
       </div>
     </div>
+    <ADivider />
     <div class="page-body">
       <slot />
     </div>

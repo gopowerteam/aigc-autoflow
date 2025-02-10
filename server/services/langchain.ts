@@ -5,7 +5,7 @@ import { StringOutputParser } from '@langchain/core/output_parsers'
 import { ChatPromptTemplate } from '@langchain/core/prompts'
 import { ChatOpenAI } from '@langchain/openai'
 
-interface LangChainOptions {
+export interface LangChainOptions {
   modelName: string
   temperature: number
   AIApiKey: string
@@ -13,7 +13,7 @@ interface LangChainOptions {
 }
 
 export class LangChainService {
-  private llm: BaseChatModel<BaseFunctionCallOptions, BaseMessageChunk>
+  public llm: BaseChatModel<BaseFunctionCallOptions, BaseMessageChunk>
 
   constructor(options: LangChainOptions) {
     this.llm = new ChatOpenAI({

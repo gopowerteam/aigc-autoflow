@@ -1,0 +1,2 @@
+CREATE TYPE "public"."system_setting_fields" AS ENUM('AdminUsername', 'AdminPassword', 'AIApiURL', 'AIApiKey', 'AIApiModel', 'AIApiPrompt');--> statement-breakpoint
+CREATE TYPE "public"."system_setting_scopes" AS ENUM('Global', 'AigcEnglish');

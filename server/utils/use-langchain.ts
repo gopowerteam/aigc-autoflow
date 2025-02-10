@@ -1,9 +1,10 @@
+import type { LangChainOptions } from '../services/langchain'
 import { inArray } from 'drizzle-orm'
 import { objectify } from 'radash'
 import { SystemSettingFieldsEnum, SystemSettingSchema } from '~/drizzle/schemas'
 import { LangChainService } from '../services/langchain'
 
-export async function useLangchain() {
+export async function useLangchain(options: Partial<LangChainOptions> = {}) {
   const settings = await db.query.SystemSettingSchema.findMany({
     where: inArray(SystemSettingSchema.key, [
       SystemSettingFieldsEnum.AIApiKey,
@@ -18,5 +19,6 @@ export async function useLangchain() {
     temperature: 0.7,
     AIApiKey: setting.AIApiKey,
     AIApiURL: setting.AIApiURL,
+    ...options,
   })
 }

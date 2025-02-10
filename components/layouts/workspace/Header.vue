@@ -2,7 +2,7 @@
 </script>
 
 <template>
-  <section class="absolute inset-0 select-none justify-between">
+  <section class="absolute inset-0 flex select-none justify-between">
     <HeaderLogo />
     <HeaderActions />
   </section>

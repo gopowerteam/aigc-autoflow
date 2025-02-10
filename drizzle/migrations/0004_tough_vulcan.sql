@@ -1,0 +1,1 @@
+ALTER TABLE "system_setting" ADD COLUMN "scope" "system_setting_scopes" NOT NULL;
