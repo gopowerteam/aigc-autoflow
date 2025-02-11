@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import menus from '@/config/menu.config'
 
+const {
+  appendClass,
+} = defineProps<{
+  appendClass?: string
+}>()
+
 // const slots = useSlots()
 const route = useRoute()
 
@@ -35,7 +41,7 @@ const routes = computed(() => {
       </div>
     </div>
     <ADivider />
-    <div class="page-body">
+    <div class="page-body" :class="appendClass">
       <slot />
     </div>
   </section>

@@ -6,8 +6,7 @@ export default defineNuxtPlugin((nuxtApp) => {
       }
 
       const tagName = binding.arg?.toString()
-
-      if (!tagName || el.tagName === tagName?.toUpperCase()) {
+      if (!tagName || el.tagName.toUpperCase() === tagName?.toUpperCase()) {
         el.id = binding.value
       }
     },

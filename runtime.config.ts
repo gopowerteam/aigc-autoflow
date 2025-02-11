@@ -25,4 +25,8 @@ export const runtimeConfig = {
       expires: process.env.AUTH_REFRESH_TOKEN_EXPIRES,
     },
   },
+  azure: {
+    subscriptionRegion: process.env.AZURE_SUBSCRIPTION_REGION,
+    subscriptionKey: process.env.AZURE_SUBSCRIPTION_KEY,
+  },
 } as const

@@ -9,9 +9,8 @@ export const EnglishTextSchema = pgTable('english_text', pipe(
   SchemaWithTime,
 )({
   title: text('title').notNull(),
-  content: text('content').notNull(),
+  topic: text('topic').notNull(),
   image: text('image'),
-  tags: text('tags').array(),
 }))
 
 export const BatchRelations = relations(EnglishTextSchema, ({ many }) => ({
