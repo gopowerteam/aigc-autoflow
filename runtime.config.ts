@@ -29,4 +29,10 @@ export const runtimeConfig = {
     subscriptionRegion: process.env.AZURE_SUBSCRIPTION_REGION,
     subscriptionKey: process.env.AZURE_SUBSCRIPTION_KEY,
   },
+  qiniu: {
+    accessToken: process.env.QINIU_ACCESS_TOKEN,
+    secretToken: process.env.QINIU_SECRET_TOKEN,
+    bucket: process.env.QINIU_UPLOAD_BUCKET,
+    domain: process.env.QINIU_UPLOAD_DOMAIN,
+  },
 } as const
