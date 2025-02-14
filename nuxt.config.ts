@@ -81,6 +81,7 @@ export default defineNuxtConfig({
     ['nuxt-viewport', {}],
     ['dayjs-nuxt', {}],
     ['arco-design-nuxt-module', {}],
+    [ '@vueuse/nuxt',{}]
   ],
   pinia: {
     storesDirs: ['./stores/**'],

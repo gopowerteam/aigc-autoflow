@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { EnglishTextSentence } from '~/drizzle/schemas/english-text-sentence.schema'
-import type { EnglishText } from '~/drizzle/schemas/english-text.schema'
 import { useQiniu } from '~/composables/hooks/use-qiniu'
 
 const qiniu = useQiniu()
@@ -26,14 +24,17 @@ const form = defineForm([{
   }],
 }])
 
-let englistText = $ref<{
+let englistContent = $ref<{
   topic: string
-  title: string
+  title: {
+    english: string
+    chinese: string
+  }
   image?: string
   audio?: string
 }>()
 
-let englishTextSentences = $ref<{
+let englishContentSentences = $ref<{
   chinese: string
   english: string
   audioBuffer?: AudioBuffer
@@ -44,25 +45,31 @@ let audioBuffer: AudioBuffer
 let audioContext: AudioContext
 
 function onGenerateText({ topic }: Record<(typeof form)[number]['key'], 'key'>) {
-  $request('/api/aigc-english/generate/text', {
+  $request('/api/aigc-english/generate/content', {
     method: 'POST',
     body: {
       topic,
     },
   }).then((result) => {
-    englistText = {
+    englistContent = {
       title: result.title,
       topic: result.topic,
     }
 
-    englishTextSentences = result.sentences
+    englishContentSentences = [
+      {
+        english: result.title.english,
+        chinese: result.title.chinese,
+      },
+      ...result.sentences,
+    ]
   })
 }
 
 async function onGenerateAudio() {
   try {
-    for (let index = 0; index < englishTextSentences!.length; index++) {
-      const scentance = englishTextSentences![index]
+    for (let index = 0; index < englishContentSentences!.length; index++) {
+      const scentance = englishContentSentences![index]
       const arrayBuffer = await $request('/api/aigc-english/generate/audio', {
         method: 'POST',
         responseType: 'arrayBuffer',
@@ -89,7 +96,7 @@ async function playAudio(audioBuffer: AudioBuffer) {
     // 创建音频源
     const source = audioContext.createBufferSource()
     source.buffer = audioBuffer
-
+    
     // 连接到输出设备
     source.connect(audioContext.destination)
 
@@ -98,7 +105,7 @@ async function playAudio(audioBuffer: AudioBuffer) {
 
     // 监听播放结束
     source.onended = () => {
-      console.log('音频播放完成')
+      // console.log('音频播放完成')
     }
   }
   catch (error) {
@@ -133,7 +140,7 @@ function concatenateAudioBuffers(audioBuffers: AudioBuffer[], audioContext: Audi
 }
 
 function playAudioFull() {
-  const audioBuffers = englishTextSentences!.map(sentence => sentence.audioBuffer!)
+  const audioBuffers = englishContentSentences!.map(sentence => sentence.audioBuffer!)
   const audioBuffersConcated = concatenateAudioBuffers(audioBuffers, audioContext)
   playAudio(audioBuffersConcated)
   audioBuffer = audioBuffersConcated
@@ -222,18 +229,30 @@ async function uploadAudio() {
 // }
 
 async function onSave() {
-  // if (
-  //   !englistText?.title
-  //   || !englistText?.topic
-  //   // || !englistText?.image
-  //   || !englishTextSentences?.length
-  // ) {
-  //   Message.error('请确实否是已经生成全部内容')
-  //   return
-  // }
+  if (
+    !englistContent?.title
+    || !englistContent?.topic
+    || !englishContentSentences?.length
+  ) {
+    Message.error('请确实否是已经生成全部内容')
+    return
+  }
 
-  const url = await uploadAudio()
-  console.log(url)
+  englistContent!.audio = await uploadAudio()
+
+  $request('/api/aigc-english', {
+    method: 'POST',
+    body: {
+      ...englistContent,
+      sentences: englishContentSentences.map(x => ({
+        chinese: x.chinese,
+        english: x.english,
+        audioDuration: x.audioDuration,
+      })),
+    },
+  }).then(() => {
+    Message.success('创建成功')
+  })
 }
 
 onMounted(async () => {
@@ -257,17 +276,17 @@ onMounted(async () => {
       <FormRender id="form" :form="form" @submit="onGenerateText" />
     </ACard>
 
-    <ACard v-if="englishTextSentences?.every(x => x.english)" title="文本预览">
+    <ACard v-if="englishContentSentences?.every(x => x.english)" title="文本预览">
       <template #extra>
         <AButton size="mini" type="text" @click="onGenerateAudio">
           生成音频
         </AButton>
-        <AButton v-if="englishTextSentences?.every(x => x.audioBuffer)" size="mini" type="text" @click="playAudioFull">
+        <AButton v-if="englishContentSentences?.every(x => x.audioBuffer)" size="mini" type="text" @click="playAudioFull">
           生成音频
         </AButton>
       </template>
       <div>
-        <div v-for="sentence in englishTextSentences" :key="sentence.english">
+        <div v-for="sentence in englishContentSentences" :key="sentence.english">
           <div class="flex">
             <div class="flex-auto">
               <AInput v-model="sentence.chinese" />

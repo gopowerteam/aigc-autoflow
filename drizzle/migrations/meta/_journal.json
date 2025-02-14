@@ -50,6 +50,20 @@
       "when": 1739177214911,
       "tag": "0006_fresh_doctor_doom",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1739499251511,
+      "tag": "0007_abnormal_wolfsbane",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1739503107786,
+      "tag": "0008_breezy_boomer",
+      "breakpoints": true
     }
   ]
 }

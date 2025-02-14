@@ -1,5 +1,5 @@
 export function useQiniu() {
-  async function upload(file: File) {
+  async function upload(file: File): Promise<string> {
     const { key, url, token } = await $request('/api/qiniu/token')
 
     const formData = new FormData()

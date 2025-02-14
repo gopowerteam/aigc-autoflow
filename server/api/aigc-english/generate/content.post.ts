@@ -9,15 +9,18 @@ const PostSchema = z.object({
   topic: z.string(),
 })
 
-async function generateEnglishText(langchain: LangChainService, topic: string, prompt: string) {
+async function generateContent(langchain: LangChainService, topic: string, prompt: string) {
   const Schema = z.object({
-    title: z.string().describe('根据主题生成文章的英文标题'),
+    title: z.object({
+      english: z.string().describe('根据主题生成文章对应的英文标题'),
+      chinese: z.string().describe('根据主题生成文章对应的中文标题'),
+    }),
     sentences: z.array(
       z.object({
-        english: z.string().describe('每句的英文原文'),
-        chinese: z.string().describe('每句的英文原文对应的中文翻译'),
+        english: z.string().describe('每段的英文内容'),
+        chinese: z.string().describe('每段的英文内容对应的中文翻译'),
       }),
-    ).describe('根据主题生成文章的句子列表'),
+    ).describe('根据主题生成文章的分段列表'),
   })
 
   const llm = langchain.llm.withStructuredOutput(Schema)
@@ -63,5 +66,5 @@ export default defineAuthEventHandler(async (event) => {
     modelName,
   })
 
-  return generateEnglishText(langchain, topic, modelPrompt)
+  return generateContent(langchain, topic, modelPrompt)
 })
