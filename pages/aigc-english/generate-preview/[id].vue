@@ -8,11 +8,12 @@ definePageMeta({
 })
 
 const route = useRoute()
+const autoPlay = 'auto-play' in route.query
 
 let aigcEnglish = $ref<AigcEnglishContent>()
 let audioContext: AudioContext
 
-let currentTime = $ref()
+let currentTime = $ref<number>()
 
 const { pause, resume } = useIntervalFn(() => {
   if (audioContext) {
@@ -21,6 +22,10 @@ const { pause, resume } = useIntervalFn(() => {
 }, 100)
 
 async function playAudio() {
+  if (!autoPlay) {
+    return
+  }
+
   navigator.mediaDevices.getUserMedia({ audio: true })
 
   audioContext = new AudioContext()
@@ -92,7 +97,7 @@ const audioDuirationRanges = $computed(() => {
 
 onMounted(async () => {
   await requestAigcEnglish()
-  window.playAudio = playAudio
+  await playAudio()
 })
 </script>
 
@@ -102,7 +107,7 @@ onMounted(async () => {
       <div
         v-for="(sentence, index,) in aigcEnglish?.sentences"
         :key="sentence.id"
-        class="text-center space-y-1" :class="{ title: index === 0, active: currentTime >= audioDuirationRanges[index].start && currentTime <= audioDuirationRanges[index].end }"
+        class="text-center space-y-1" :class="{ title: index === 0, active: currentTime && currentTime >= audioDuirationRanges[index].start && currentTime <= audioDuirationRanges[index].end }"
       >
         <div class="english text-20px text-#333">
           {{ sentence.english }}
