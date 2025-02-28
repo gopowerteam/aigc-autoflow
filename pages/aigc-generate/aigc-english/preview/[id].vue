@@ -8,11 +8,12 @@ definePageMeta({
 })
 
 const route = useRoute()
+const autoPlay = 'auto-play' in route.query
 
 let aigcEnglish = $ref<AigcEnglishContent>()
 let audioContext: AudioContext
 
-let currentTime = $ref(0)
+let currentTime = $ref<number>()
 
 const { pause, resume } = useIntervalFn(() => {
   if (audioContext) {
@@ -21,6 +22,10 @@ const { pause, resume } = useIntervalFn(() => {
 }, 100)
 
 async function playAudio() {
+  if (!autoPlay) {
+    return
+  }
+
   navigator.mediaDevices.getUserMedia({ audio: true })
 
   audioContext = new AudioContext()
@@ -97,32 +102,50 @@ onMounted(async () => {
 </script>
 
 <template>
-  <section v-if="aigcEnglish" class="absolute inset-0 flex items-center justify-center">
-    <div class="text-18px space-y-3">
+  <section v-if="aigcEnglish" class="page-container absolute inset-0 flex items-center justify-center">
+    <div class="space-y-4">
       <div
-        v-for="(sentence, index) in aigcEnglish?.sentences"
+        v-for="(sentence, index,) in aigcEnglish?.sentences"
         :key="sentence.id"
-        class="text-center space-y-1" :class="{ title: index === 0, active: currentTime >= audioDuirationRanges[index].start && currentTime <= audioDuirationRanges[index].end }"
+        class="text-center space-y-1" :class="{ title: index === 0, active: currentTime && currentTime >= audioDuirationRanges[index].start && currentTime <= audioDuirationRanges[index].end }"
       >
-        <div>{{ sentence.english }}</div>
-        <div>{{ sentence.chinese }}</div>
+        <div class="english text-20px text-#333">
+          {{ sentence.english }}
+        </div>
+        <div
+          class="chinese text-16px text-#999 tracking-wider"
+        >
+          {{ sentence.chinese }}
+        </div>
       </div>
     </div>
   </section>
 </template>
 
 <style scoped lang="scss">
+.page-container {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Crect width='20' height='0' fill='%23fff' /%3E%3Crect x='50%' width='1' height='100%' fill='rgb(245 245 245)' /%3E%3Crect y='50%' width='100%' height='1' fill='rgb(245 245 245)' /%3E%3C/svg%3E%0A");
+}
+
 .title {
   font-weight: bold;
   font-size: 24px;
   margin-bottom: 20px;
+  color: #000;
 }
 
 .active {
-  background-color: red;
+  background-color: blue;
   border-radius: 10px;
-  color: #fff;
   padding: 10px;
   font-weight: bold;
+
+  .english {
+    color: #fff !important;
+  }
+
+  .chinese {
+    color: #eee !important;
+  }
 }
 </style>
