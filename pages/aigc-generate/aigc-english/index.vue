@@ -1,16 +1,17 @@
 <script setup lang="ts">
 import { useQiniu } from '~/composables/hooks/use-qiniu'
+import GenerateTitles from './components/generate-titles.vue'
 
 const qiniu = useQiniu()
 
 definePageMeta({
   layout: 'workspace',
-  title: '文本生成',
+  title: '英语短文',
   requireAuth: true,
-  name: 'aigc-english.generate-text',
+  name: 'aigc-generate.aigc-english',
   menu: {
-    key: 'generate-text',
-    path: ['aigc-english'],
+    key: 'aigc-english',
+    path: ['aigc-generate'],
     index: 1,
   },
 })
@@ -96,7 +97,7 @@ async function playAudio(audioBuffer: AudioBuffer) {
     // 创建音频源
     const source = audioContext.createBufferSource()
     source.buffer = audioBuffer
-    
+
     // 连接到输出设备
     source.connect(audioContext.destination)
 
@@ -224,9 +225,9 @@ async function uploadAudio() {
   return qiniu.upload(file)
 }
 
-// function generateImage(){
-
-// }
+async function onSetting() {
+  navigateTo('/aigc-generate/aigc-english/setting')
+}
 
 async function onSave() {
   if (
@@ -263,10 +264,11 @@ onMounted(async () => {
 <template>
   <PageContainer append-class="space-y-2">
     <template #actions>
-      <AButton type="primary" @click="onSave">
-        保存
+      <AButton type="primary" size="mini" @click="onSetting">
+        设置
       </AButton>
     </template>
+    <GenerateTitles />
     <ACard title="文本生成" size="small">
       <template #extra>
         <AButton size="mini" type="text" html-type="submit" form="form">

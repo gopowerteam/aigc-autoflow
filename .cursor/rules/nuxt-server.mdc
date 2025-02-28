@@ -1,0 +1,45 @@
+---
+description: generate code about nuxt server
+globs: 
+---
+针对开发后端相关接口，有以下需要遵守的规则:
+
+
+参数验证：
+- 使用基于 zod 的方式进行接口传入的参数验证
+- 应从`h3-zod`中导出`z`来实现zod的Schema定义
+- 需要根据对应的请求方式定义验证参数的Schema
+- 根据需要定义Schema名称应为: BodySchema, QuerySchema, ParamsSchema
+- 使用`useSafeBody`,`useSafeQuery`,`useSafeParams`来从event中结构`body`,`query`,`params`参数，因为这些函数添加了异常处理的逻辑
+
+
+接口鉴权:
+- 需要使用`defineAuthEventHandler`来代替`defineAEventHandler`函数定义请求逻辑，因为`defineAuthEventHandler`中实现了鉴权相关的逻辑
+
+示例代码:
+
+- defineAuthEventHandler
+
+```
+import { defineAuthEventHandler } from '~/server/utils/define-auth-event-handler'
+
+export default defineAuthEventHandler(async (event) => {
+  //...
+})
+```
+
+- useSafeBody
+
+```
+import { z } from 'h3-zod'
+
+const PostSchema = z.object({
+  content: z.string(),
+})
+
+export default defineAuthEventHandler(async (event) => {
+  const { content } = await useSafeBody(event, PostSchema)
+
+  //...
+})
+```

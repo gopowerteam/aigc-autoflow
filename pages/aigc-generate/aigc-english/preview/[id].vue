@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { AigcEnglishContent } from '~/drizzle/schemas';
+import type { AigcEnglishContent } from '~/drizzle/schemas'
 
 definePageMeta({
   layout: 'default',
@@ -14,14 +14,14 @@ let audioContext: AudioContext
 
 let currentTime = $ref(0)
 
-const {pause, resume} = useIntervalFn(()=>{
-  if(audioContext){
-    currentTime = audioContext.currentTime;
+const { pause, resume } = useIntervalFn(() => {
+  if (audioContext) {
+    currentTime = audioContext.currentTime
   }
 }, 100)
 
 async function playAudio() {
-  navigator.mediaDevices.getUserMedia({ audio: true });
+  navigator.mediaDevices.getUserMedia({ audio: true })
 
   audioContext = new AudioContext()
   const audioBuffer = await fetch(aigcEnglish!.audio!)
@@ -58,8 +58,8 @@ async function requestAigcEnglish() {
   const data = await $request('/api/aigc-english/:id', {
     method: 'GET',
     params: {
-      id: route.params.id
-    }
+      id: route.params.id,
+    },
   })
 
   aigcEnglish = data
@@ -71,19 +71,19 @@ const audioDuirationRanges = $computed(() => {
   }
 
   const getDurationSum = (currentIndex: number) => {
-    return aigcEnglish!.sentences .reduce<number>((duration, sentence, index)=>{
+    return aigcEnglish!.sentences.reduce<number>((duration, sentence, index) => {
       if (currentIndex > index) {
         duration += sentence.audioDuration
       }
       return duration
-    },0)
+    }, 0)
   }
 
   const ranges = aigcEnglish.sentences?.map((sentence, index) => {
     const start = getDurationSum(index)
     return {
       start,
-      end: start + sentence.audioDuration
+      end: start + sentence.audioDuration,
     }
   })
 
@@ -93,15 +93,17 @@ const audioDuirationRanges = $computed(() => {
 onMounted(async () => {
   await requestAigcEnglish()
   await playAudio()
-})  
+})
 </script>
 
 <template>
-  <section v-if="aigcEnglish" class="absolute inset-0 flex justify-center items-center">
-    <div class="space-y-3 text-18px">
-      <div class="text-center space-y-1" 
-      :class="{ title: index === 0, active: currentTime>= audioDuirationRanges[index].start &&  currentTime <= audioDuirationRanges[index].end  }"
-        v-for="(sentence, index, ) in aigcEnglish?.sentences" :key="sentence.id">
+  <section v-if="aigcEnglish" class="absolute inset-0 flex items-center justify-center">
+    <div class="text-18px space-y-3">
+      <div
+        v-for="(sentence, index) in aigcEnglish?.sentences"
+        :key="sentence.id"
+        class="text-center space-y-1" :class="{ title: index === 0, active: currentTime >= audioDuirationRanges[index].start && currentTime <= audioDuirationRanges[index].end }"
+      >
         <div>{{ sentence.english }}</div>
         <div>{{ sentence.chinese }}</div>
       </div>
@@ -119,7 +121,7 @@ onMounted(async () => {
 .active {
   background-color: red;
   border-radius: 10px;
-  color:#fff;
+  color: #fff;
   padding: 10px;
   font-weight: bold;
 }

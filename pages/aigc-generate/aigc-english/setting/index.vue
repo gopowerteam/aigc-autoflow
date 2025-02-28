@@ -4,14 +4,9 @@ import { SystemSettingFieldsEnum, SystemSettingScopesEnum } from '~/drizzle/sche
 
 definePageMeta({
   layout: 'workspace',
-  title: '生成设置',
+  title: '英文短文生成设置',
   requireAuth: true,
-  name: 'aigc-english.setting',
-  menu: {
-    key: 'setting',
-    path: ['aigc-english'],
-    index: 5,
-  },
+  name: 'aigc-generate.aigc-english-setting',
 })
 
 const formModel = $ref<Partial<Record<SystemSettingFieldsEnum, string>>>({

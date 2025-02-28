@@ -1,0 +1,12 @@
+---
+description: generate code about nuxt client
+globs: .tsx,.vue
+---
+针对开发前端相关页面和组件，有以下需要遵守的规则:
+
+UI 和样式
+- 使用 Arco Design Vue 和 UnoCSS 进行组件和样式设计。
+- 使用 UnoCSS 实现响应式设计；采用移动优先方法。
+
+网络请求
+- 使用 $request 和 useRequest 来代替使用 $fetch 和 useFetch, 因为$request, useRequest实现了鉴权功能

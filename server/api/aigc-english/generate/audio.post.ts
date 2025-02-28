@@ -12,10 +12,7 @@ export default defineAuthEventHandler(async (event) => {
   const speech = useSpeech()
 
   const audio = await speech.synthesizeSpeech(content)
-  // 设置响应头
-  // setResponseHeader(event, 'Content-Type', 'application/octet-stream')
-  // setResponseHeader(event, 'Content-Length', audio.byteLength.toString())
-  
+
   return new Response(audio as ArrayBuffer, {
     headers: {
       'Content-Type': 'audio/wav',

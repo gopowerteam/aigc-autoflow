@@ -9,6 +9,7 @@ const {
 
 // const slots = useSlots()
 const route = useRoute()
+const router = useRouter()
 
 // const showHeader = $computed(() => {
 //   return !!slots.actions
@@ -20,7 +21,7 @@ const routes = computed(() => {
   return [
     ...items.map(path => ({
       path,
-      label: menus.find(x => x.key === path)!.title,
+      label: menus.find(x => x.key === path)?.title || '',
     })),
     {
       path: current,
@@ -28,6 +29,17 @@ const routes = computed(() => {
     },
   ]
 })
+
+const canGoBack = computed(() => {
+  if (route.meta.menu) {
+    return false
+  }
+  return window?.history?.state?.back || route.path !== '/'
+})
+
+function handleGoBack() {
+  router.back()
+}
 </script>
 
 <template>
@@ -36,8 +48,16 @@ const routes = computed(() => {
       <div>
         <ABreadcrumb :routes="routes" />
       </div>
-      <div class="flex items-center gap-5px">
+      <div class="actions-container flex items-center gap-2">
         <slot name="actions" />
+        <AButton
+          v-if="canGoBack"
+          size="mini"
+          type="outline"
+          @click="handleGoBack"
+        >
+          返回
+        </AButton>
       </div>
     </div>
     <ADivider />
@@ -48,5 +68,7 @@ const routes = computed(() => {
 </template>
 
 <style scoped>
-
+.actions-container :deep(button) {
+  height: 28px;
+}
 </style>
