@@ -15,7 +15,7 @@ export async function useLangchain(options: Partial<LangChainOptions> = {}) {
   const setting = objectify(settings, x => x.key, x => x.value)
 
   return new LangChainService({
-    modelName: 'gpt-4o-mini',
+    modelName: options.modelName || 'gpt-4o-mini',
     temperature: 0.7,
     AIApiKey: setting.AIApiKey,
     AIApiURL: setting.AIApiURL,

@@ -37,7 +37,7 @@ export async function runSystemSettingSeed(tx: TX) {
     // AigcEnglish
     {
       key: SystemSettingFieldsEnum.AigcEnglishModel,
-      value: 'deepseek-v3',
+      value: 'gpt-4o-mini',
       scope: SystemSettingScopesEnum.AigcEnglish,
     },
     {

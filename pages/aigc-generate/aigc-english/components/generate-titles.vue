@@ -7,12 +7,11 @@ interface Title {
 const emit = defineEmits<{
   (event: 'select', title: Title): void
 }>()
-const loading = ref(false)
+
 const titles = ref<Title[]>([])
 
 async function generateTitles() {
   try {
-    loading.value = true
     const response = await $request('/api/aigc-english/generate/title', {
       method: 'POST',
     })
@@ -23,9 +22,6 @@ async function generateTitles() {
   }
   catch (error) {
     console.error('生成标题失败:', error)
-  }
-  finally {
-    loading.value = false
   }
 }
 
@@ -41,33 +37,10 @@ onMounted(() => {
 
 <template>
   <div class="w-full">
-    <div class="mb-4 flex items-center justify-between">
-      <div class="text-lg font-semibold">
-        标题生成
-      </div>
-      <a-button
-        :loading="loading"
-        type="primary"
-        @click="generateTitles"
-      >
-        重新生成
-      </a-button>
-    </div>
-
-    <div v-if="loading" class="w-full flex justify-center py-8">
-      <a-spin dot />
-    </div>
-
-    <div
-      v-else
-      class="grid grid-cols-1 gap-4 md:grid-cols-2"
-    >
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
       <a-card
-        v-for="title in titles"
-        :key="title.english"
-        class="cursor-pointer transition-shadow hover:shadow-lg"
-        :hoverable="true"
-        @click="handleTitleSelect(title)"
+        v-for="title in titles" :key="title.english" class="cursor-pointer transition-shadow hover:shadow-lg"
+        :hoverable="true" @click="handleTitleSelect(title)"
       >
         <div class="space-y-2">
           <div class="text-base font-medium">

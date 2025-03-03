@@ -1,1 +1,0 @@
-ALTER TABLE "aigc_english_sentence" ALTER COLUMN "audio_duration" SET DATA TYPE real;

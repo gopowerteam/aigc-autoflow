@@ -12,7 +12,9 @@ async function generateTitles(langchain: LangChainService) {
         english: z.string().describe('随机生成的英文标题'),
         chinese: z.string().describe('对应的中文标题翻译'),
       }),
-    ).length(10).describe('生成10个随机的标题'),
+    )
+      .length(10)
+      .describe('生成10个随机的标题'),
   })
 
   const llm = langchain.llm.withStructuredOutput(Schema)
@@ -26,7 +28,6 @@ async function generateTitles(langchain: LangChainService) {
   const result = await chain.invoke({})
 
   const { data, success } = Schema.safeParse(result)
-
   if (success)
     return data
   else
@@ -48,7 +49,7 @@ export default defineAuthEventHandler(async () => {
   }
 
   const langchain = await useLangchain({
-    modelName,
+    modelName: 'gpt-4o-mini',
   })
 
   return generateTitles(langchain)
