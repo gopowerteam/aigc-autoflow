@@ -3,6 +3,8 @@ body {
   padding: 0;
   margin: 0;
   font-family: 'Arial', 'Microsoft YaHei', '黑体', '宋体', sans-serif;
+
+  --border-radius-small: 0.5rem !important;
 }
 
 div {
@@ -32,4 +34,8 @@ div {
 
 .arco-dropdown-option {
   justify-content: center;
+}
+
+.arco-tabs-nav-tab {
+  justify-content: center !important;
 }

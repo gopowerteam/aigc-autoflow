@@ -2,6 +2,7 @@ import { FileSystemIconLoader } from '@iconify/utils/lib/loader/node-loaders'
 import presetAttributify from '@unocss/preset-attributify'
 import presetIcons from '@unocss/preset-icons'
 import transformerDirective from '@unocss/transformer-directives'
+import transformerVariantGroup from '@unocss/transformer-variant-group'
 import { defineConfig, presetUno } from 'unocss'
 import { breakpoints } from './package.json'
 
@@ -42,9 +43,11 @@ export default defineConfig({
         'vertical-align': 'middle',
       },
     }),
-
   ],
-  transformers: [transformerDirective()],
+  transformers: [
+    transformerDirective(),
+    transformerVariantGroup(),
+  ],
   theme: {
     colors: {
       primary: '#1f6ae3',

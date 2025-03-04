@@ -1,11 +1,54 @@
 <script setup lang="ts">
-import { useQiniu } from '~/composables/hooks/use-qiniu'
-import GenerateTitles from './components/generate-titles.vue'
+import GenerateContent from './components/generate-content.vue'
+// import { useQiniu } from '~/composables/hooks/use-qiniu'
+import GenerateTitle from './components/generate-topic.vue'
 
-const qiniu = useQiniu()
+// const qiniu = useQiniu()
+
+const steps = [
+  'generate-content',
+  'generate-audio',
+  'generate-image',
+  'generate-video',
+] as const
+
+let topic = $ref<string>('')
+
+const data = ref<{
+  title: {
+    chinese: string
+    english: string
+  }
+  sentences: {
+    chinese: string
+    english: string
+  }[]
+  image: string
+  audio: string
+  video: string
+}>({
+  title: {
+    chinese: '',
+    english: '',
+  },
+  sentences: [],
+  image: '',
+  audio: '',
+  video: '',
+})
+
+let currentStep = $ref<number>(-1)
+let currentActive = ref<typeof steps[number]>()
+const taskListeners: { task: string, callback: () => Promise<void> }[] = []
+
+provide(InjectKeys.aigc.english.addTaskListener, (task: string, callback: () => Promise<void>) => {
+  taskListeners.push({
+    task,
+    callback,
+  })
+})
 
 definePageMeta({
-  layout: 'workspace',
   title: '英语短文',
   requireAuth: true,
   name: 'aigc-generate.aigc-english',
@@ -16,269 +59,302 @@ definePageMeta({
   },
 })
 
-const form = defineForm([{
-  key: 'topic',
-  title: '主题',
-  rule: [{
-    required: true,
-    message: '请输入主题',
-  }],
-}])
+function onStart(value: string) {
+  topic = value
 
-let englistContent = $ref<{
-  topic: string
-  title: {
-    english: string
-    chinese: string
-  }
-  image?: string
-  audio?: string
-}>()
+  nextTick(async () => {
+    for (let i = 0; i < steps.length; i++) {
+      currentStep = i
+      currentActive = steps[i]
+      const task = taskListeners.find(x => x.task === steps[i])
 
-let englishContentSentences = $ref<{
-  chinese: string
-  english: string
-  audioBuffer?: AudioBuffer
-  audioDuration?: number
-}[]>()
-
-let audioBuffer: AudioBuffer
-let audioContext: AudioContext
-
-function onGenerateText({ topic }: Record<(typeof form)[number]['key'], 'key'>) {
-  $request('/api/aigc-english/generate/content', {
-    method: 'POST',
-    body: {
-      topic,
-    },
-  }).then((result) => {
-    englistContent = {
-      title: result.title,
-      topic: result.topic,
-    }
-
-    englishContentSentences = [
-      {
-        english: result.title.english,
-        chinese: result.title.chinese,
-      },
-      ...result.sentences,
-    ]
-  })
-}
-
-async function onGenerateAudio() {
-  try {
-    for (let index = 0; index < englishContentSentences!.length; index++) {
-      const scentance = englishContentSentences![index]
-      const arrayBuffer = await $request('/api/aigc-english/generate/audio', {
-        method: 'POST',
-        responseType: 'arrayBuffer',
-        body: {
-          content: scentance.english,
-        },
-      }) as ArrayBuffer
-
-      if (arrayBuffer) {
-        // 将 ArrayBuffer 解码成 AudioBuffer
-        const audioBuffer = await audioContext.decodeAudioData(arrayBuffer)
-        scentance.audioBuffer = audioBuffer
-        scentance.audioDuration = audioBuffer.duration
+      if (task) {
+        await task.callback()
       }
     }
-  }
-  catch (ex) {
-    console.error(ex)
-  }
-}
-
-async function playAudio(audioBuffer: AudioBuffer) {
-  try {
-    // 创建音频源
-    const source = audioContext.createBufferSource()
-    source.buffer = audioBuffer
-
-    // 连接到输出设备
-    source.connect(audioContext.destination)
-
-    // 开始播放
-    source.start(0)
-
-    // 监听播放结束
-    source.onended = () => {
-      // console.log('音频播放完成')
-    }
-  }
-  catch (error) {
-    console.error('音频播放失败:', error)
-  }
-}
-
-function concatenateAudioBuffers(audioBuffers: AudioBuffer[], audioContext: AudioContext): AudioBuffer {
-  // 计算总时长
-  const totalLength = audioBuffers.reduce((sum, audioBuffer) => sum + audioBuffer.length, 0)
-
-  // 创建新的 AudioBuffer
-  const result = audioContext.createBuffer(
-    audioBuffers[0].numberOfChannels,
-    totalLength,
-    audioBuffers[0].sampleRate,
-  )
-
-  // 合并每个通道的数据
-  for (let channel = 0; channel < result.numberOfChannels; channel++) {
-    const channelData = result.getChannelData(channel)
-    let offset = 0
-
-    // 依次拷贝每个 AudioBuffer 的数据
-    audioBuffers.forEach((audioBuffer) => {
-      channelData.set(audioBuffer.getChannelData(channel), offset)
-      offset += audioBuffer.length
-    })
-  }
-
-  return result
-}
-
-function playAudioFull() {
-  const audioBuffers = englishContentSentences!.map(sentence => sentence.audioBuffer!)
-  const audioBuffersConcated = concatenateAudioBuffers(audioBuffers, audioContext)
-  playAudio(audioBuffersConcated)
-  audioBuffer = audioBuffersConcated
-}
-
-function audioBufferToFile(): File {
-  if (!audioBuffer)
-    throw new Error('没有可用的音频数据')
-
-  // 获取音频参数
-  const numberOfChannels = audioBuffer.numberOfChannels
-  const length = audioBuffer.length
-  const sampleRate = audioBuffer.sampleRate
-
-  // 创建 WAV 文件头
-  const wavHeader = createWavHeader(length, numberOfChannels, sampleRate)
-
-  // 获取音频数据
-  const audioData = new Float32Array(length * numberOfChannels)
-  for (let channel = 0; channel < numberOfChannels; channel++) {
-    const channelData = audioBuffer.getChannelData(channel)
-    for (let i = 0; i < length; i++)
-      audioData[i * numberOfChannels + channel] = channelData[i]
-  }
-
-  // 将音频数据转换为 16 位整数
-  const pcmData = new Int16Array(audioData.length)
-  for (let i = 0; i < audioData.length; i++) {
-    const s = Math.max(-1, Math.min(1, audioData[i]))
-    pcmData[i] = s < 0 ? s * 0x8000 : s * 0x7FFF
-  }
-
-  // 合并文件头和音频数据
-  const wavBlob = new Blob([wavHeader, pcmData], { type: 'audio/wav' })
-
-  // 创建唯一文件名
-  const filename = `audio-${Date.now()}.wav`
-
-  return new File([wavBlob], filename, { type: 'audio/wav' })
-}
-
-/**
- * 创建 WAV 文件头
- */
-function createWavHeader(length: number, numberOfChannels: number, sampleRate: number) {
-  const buffer = new ArrayBuffer(44)
-  const view = new DataView(buffer)
-
-  // RIFF chunk descriptor
-  writeString(view, 0, 'RIFF')
-  view.setUint32(4, 36 + length * 2, true)
-  writeString(view, 8, 'WAVE')
-
-  // fmt sub-chunk
-  writeString(view, 12, 'fmt ')
-  view.setUint32(16, 16, true) // fmt chunk size
-  view.setUint16(20, 1, true) // audio format (1 = PCM)
-  view.setUint16(22, numberOfChannels, true)
-  view.setUint32(24, sampleRate, true)
-  view.setUint32(28, sampleRate * numberOfChannels * 2, true) // byte rate
-  view.setUint16(32, numberOfChannels * 2, true) // block align
-  view.setUint16(34, 16, true) // bits per sample
-
-  // data sub-chunk
-  writeString(view, 36, 'data')
-  view.setUint32(40, length * 2, true)
-
-  return buffer
-}
-
-/**
- * 写入字符串到 DataView
- */
-function writeString(view: DataView, offset: number, string: string) {
-  for (let i = 0; i < string.length; i++)
-    view.setUint8(offset + i, string.charCodeAt(i))
-}
-
-async function uploadAudio() {
-  const file = await audioBufferToFile()
-  return qiniu.upload(file)
-}
-
-async function onSetting() {
-  navigateTo('/aigc-generate/aigc-english/setting')
-}
-
-async function onSave() {
-  if (
-    !englistContent?.title
-    || !englistContent?.topic
-    || !englishContentSentences?.length
-  ) {
-    Message.error('请确实否是已经生成全部内容')
-    return
-  }
-
-  englistContent!.audio = await uploadAudio()
-
-  $request('/api/aigc-english', {
-    method: 'POST',
-    body: {
-      ...englistContent,
-      sentences: englishContentSentences.map(x => ({
-        chinese: x.chinese,
-        english: x.english,
-        audioDuration: x.audioDuration,
-      })),
-    },
-  }).then(() => {
-    Message.success('创建成功')
   })
 }
 
+// const form = defineForm([{
+//   key: 'topic',
+//   title: '主题',
+//   rule: [{
+//     required: true,
+//     message: '请输入主题',
+//   }],
+// }])
+
+// let englistContent = $ref<{
+//   topic: string
+//   title: {
+//     english: string
+//     chinese: string
+//   }
+//   image?: string
+//   audio?: string
+// }>()
+
+// let englishContentSentences = $ref<{
+//   chinese: string
+//   english: string
+//   audioBuffer?: AudioBuffer
+//   audioDuration?: number
+// }[]>()
+
+// let audioBuffer: AudioBuffer
+// let audioContext: AudioContext
+
+// function onGenerateText({ topic }: Record<(typeof form)[number]['key'], 'key'>) {
+//   $request('/api/aigc-english/generate/content', {
+//     method: 'POST',
+//     body: {
+//       topic,
+//     },
+//   }).then((result) => {
+//     englistContent = {
+//       title: result.title,
+//       topic: result.topic,
+//     }
+
+//     englishContentSentences = [
+//       {
+//         english: result.title.english,
+//         chinese: result.title.chinese,
+//       },
+//       ...result.sentences,
+//     ]
+//   })
+// }
+
+// async function onGenerateAudio() {
+//   try {
+//     for (let index = 0; index < englishContentSentences!.length; index++) {
+//       const scentance = englishContentSentences![index]
+//       const arrayBuffer = await $request('/api/aigc-english/generate/audio', {
+//         method: 'POST',
+//         responseType: 'arrayBuffer',
+//         body: {
+//           content: scentance.english,
+//         },
+//       }) as ArrayBuffer
+
+//       if (arrayBuffer) {
+//         // 将 ArrayBuffer 解码成 AudioBuffer
+//         const audioBuffer = await audioContext.decodeAudioData(arrayBuffer)
+//         scentance.audioBuffer = audioBuffer
+//         scentance.audioDuration = audioBuffer.duration
+//       }
+//     }
+//   }
+//   catch (ex) {
+//     console.error(ex)
+//   }
+// }
+
+// async function playAudio(audioBuffer: AudioBuffer) {
+//   try {
+//     // 创建音频源
+//     const source = audioContext.createBufferSource()
+//     source.buffer = audioBuffer
+
+//     // 连接到输出设备
+//     source.connect(audioContext.destination)
+
+//     // 开始播放
+//     source.start(0)
+
+//     // 监听播放结束
+//     source.onended = () => {
+//       // console.log('音频播放完成')
+//     }
+//   }
+//   catch (error) {
+//     console.error('音频播放失败:', error)
+//   }
+// }
+
+// function concatenateAudioBuffers(audioBuffers: AudioBuffer[], audioContext: AudioContext): AudioBuffer {
+//   // 计算总时长
+//   const totalLength = audioBuffers.reduce((sum, audioBuffer) => sum + audioBuffer.length, 0)
+
+//   // 创建新的 AudioBuffer
+//   const result = audioContext.createBuffer(
+//     audioBuffers[0].numberOfChannels,
+//     totalLength,
+//     audioBuffers[0].sampleRate,
+//   )
+
+//   // 合并每个通道的数据
+//   for (let channel = 0; channel < result.numberOfChannels; channel++) {
+//     const channelData = result.getChannelData(channel)
+//     let offset = 0
+
+//     // 依次拷贝每个 AudioBuffer 的数据
+//     audioBuffers.forEach((audioBuffer) => {
+//       channelData.set(audioBuffer.getChannelData(channel), offset)
+//       offset += audioBuffer.length
+//     })
+//   }
+
+//   return result
+// }
+
+// function playAudioFull() {
+//   const audioBuffers = englishContentSentences!.map(sentence => sentence.audioBuffer!)
+//   const audioBuffersConcated = concatenateAudioBuffers(audioBuffers, audioContext)
+//   playAudio(audioBuffersConcated)
+//   audioBuffer = audioBuffersConcated
+// }
+
+// function audioBufferToFile(): File {
+//   if (!audioBuffer)
+//     throw new Error('没有可用的音频数据')
+
+//   // 获取音频参数
+//   const numberOfChannels = audioBuffer.numberOfChannels
+//   const length = audioBuffer.length
+//   const sampleRate = audioBuffer.sampleRate
+
+//   // 创建 WAV 文件头
+//   const wavHeader = createWavHeader(length, numberOfChannels, sampleRate)
+
+//   // 获取音频数据
+//   const audioData = new Float32Array(length * numberOfChannels)
+//   for (let channel = 0; channel < numberOfChannels; channel++) {
+//     const channelData = audioBuffer.getChannelData(channel)
+//     for (let i = 0; i < length; i++)
+//       audioData[i * numberOfChannels + channel] = channelData[i]
+//   }
+
+//   // 将音频数据转换为 16 位整数
+//   const pcmData = new Int16Array(audioData.length)
+//   for (let i = 0; i < audioData.length; i++) {
+//     const s = Math.max(-1, Math.min(1, audioData[i]))
+//     pcmData[i] = s < 0 ? s * 0x8000 : s * 0x7FFF
+//   }
+
+//   // 合并文件头和音频数据
+//   const wavBlob = new Blob([wavHeader, pcmData], { type: 'audio/wav' })
+
+//   // 创建唯一文件名
+//   const filename = `audio-${Date.now()}.wav`
+
+//   return new File([wavBlob], filename, { type: 'audio/wav' })
+// }
+
+// /**
+//  * 创建 WAV 文件头
+//  */
+// function createWavHeader(length: number, numberOfChannels: number, sampleRate: number) {
+//   const buffer = new ArrayBuffer(44)
+//   const view = new DataView(buffer)
+
+//   // RIFF chunk descriptor
+//   writeString(view, 0, 'RIFF')
+//   view.setUint32(4, 36 + length * 2, true)
+//   writeString(view, 8, 'WAVE')
+
+//   // fmt sub-chunk
+//   writeString(view, 12, 'fmt ')
+//   view.setUint32(16, 16, true) // fmt chunk size
+//   view.setUint16(20, 1, true) // audio format (1 = PCM)
+//   view.setUint16(22, numberOfChannels, true)
+//   view.setUint32(24, sampleRate, true)
+//   view.setUint32(28, sampleRate * numberOfChannels * 2, true) // byte rate
+//   view.setUint16(32, numberOfChannels * 2, true) // block align
+//   view.setUint16(34, 16, true) // bits per sample
+
+//   // data sub-chunk
+//   writeString(view, 36, 'data')
+//   view.setUint32(40, length * 2, true)
+
+//   return buffer
+// }
+
+// /**
+//  * 写入字符串到 DataView
+//  */
+// function writeString(view: DataView, offset: number, string: string) {
+//   for (let i = 0; i < string.length; i++)
+//     view.setUint8(offset + i, string.charCodeAt(i))
+// }
+
+// async function uploadAudio() {
+//   const file = await audioBufferToFile()
+//   return qiniu.upload(file)
+// }
+
+// async function onSetting() {
+//   navigateTo('/aigc-generate/aigc-english/setting')
+// }
+
+// async function onSave() {
+//   if (
+//     !englistContent?.title
+//     || !englistContent?.topic
+//     || !englishContentSentences?.length
+//   ) {
+//     Message.error('请确实否是已经生成全部内容')
+//     return
+//   }
+
+//   englistContent!.audio = await uploadAudio()
+
+//   $request('/api/aigc-english', {
+//     method: 'POST',
+//     body: {
+//       ...englistContent,
+//       sentences: englishContentSentences.map(x => ({
+//         chinese: x.chinese,
+//         english: x.english,
+//         audioDuration: x.audioDuration,
+//       })),
+//     },
+//   }).then(() => {
+//     Message.success('创建成功')
+//   })
+// }
+
 onMounted(async () => {
-  audioContext = new AudioContext()
+  // audioContext = new AudioContext()
 })
 </script>
 
 <template>
-  <PageContainer append-class="space-y-2">
-    <template #actions>
-      <AButton type="primary" size="mini" @click="onSetting">
-        设置
-      </AButton>
-    </template>
-    <GenerateTitles />
-    <ACard title="文本生成" size="small">
+  <div class="absolute inset-0 flex">
+    <div class="box-border w-60 p-2">
+      <GenerateTitle @submit="onStart" />
+    </div>
+    <div class="flex-auto bg-#333 p-10 relative">
+      {{ currentActive }}
+      <ACollapse v-model:active-key="currentActive" v-show="currentStep >= 0" accordion>
+        <ACollapseItem header="生成内容" key="generate-content">
+          <template #extra>
+            <div class="flex items-center">
+              <ASpin :size="20" v-if="currentStep === steps.findIndex(x => x === 'generate-content')" />
+              <i v-else class="icon-park-outline:check-one text-5 text-green-500" />
+            </div>
+          </template>
+          <GenerateContent v-model:title="data.title" v-model:sentences="data.sentences" :topic="topic" />
+        </ACollapseItem>
+      </ACollapse>
+      <div v-show="currentStep < 0">
+        <div class="absolute inset-0 flex items-center justify-center">
+          <AEmpty>请选择主题后生成短文</AEmpty>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- <ACard title="文本生成" size="small">
       <template #extra>
         <AButton size="mini" type="text" html-type="submit" form="form">
           生成文本
         </AButton>
       </template>
       <FormRender id="form" :form="form" @submit="onGenerateText" />
-    </ACard>
+    </ACard> -->
 
-    <ACard v-if="englishContentSentences?.every(x => x.english)" title="文本预览">
+  <!-- <ACard v-if="englishContentSentences?.every(x => x.english)" title="文本预览">
       <template #extra>
         <AButton size="mini" type="text" @click="onGenerateAudio">
           生成音频
@@ -306,8 +382,7 @@ onMounted(async () => {
           <ADivider />
         </div>
       </div>
-    </ACard>
-  </PageContainer>
+    </ACard> -->
 </template>
 
 <style scoped></style>

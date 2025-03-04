@@ -1,3 +1,4 @@
+import type { NuxtPage } from 'nuxt/schema'
 import { FormRenderResolver } from '@gopowerteam/form-render'
 import { TableRenderResolver } from '@gopowerteam/table-render'
 import ReactivityTransform from '@vue-macros/reactivity-transform/vite'
@@ -22,9 +23,6 @@ export default defineNuxtConfig({
   css: [
     '@unocss/reset/normalize.css',
     '@/styles/index.scss',
-  ],
-  ignore: [
-    'pages/**/components/**/*',
   ],
   components: [{
     path: '~/components',
@@ -81,7 +79,7 @@ export default defineNuxtConfig({
     ['nuxt-viewport', {}],
     ['dayjs-nuxt', {}],
     ['arco-design-nuxt-module', {}],
-    [ '@vueuse/nuxt',{}]
+    ['@vueuse/nuxt', {}],
   ],
   pinia: {
     storesDirs: ['./stores/**'],
@@ -114,6 +112,27 @@ export default defineNuxtConfig({
         driver: 'redis',
         ...runtimeConfig.redis,
       },
+    },
+  },
+  hooks: {
+    'pages:extend': function (pages) {
+      const removeComponentsDirs = (pattern: RegExp, pages: NuxtPage[] = []) => {
+        const pagesToRemove: NuxtPage[] = []
+
+        for (const page of pages) {
+          if (page.file && pattern.test(page.file)) {
+            pagesToRemove.push(page)
+          }
+          else {
+            removeComponentsDirs(pattern, page.children)
+          }
+        }
+        for (const page of pagesToRemove) {
+          pages.splice(pages.indexOf(page), 1)
+        }
+      }
+
+      removeComponentsDirs(/pages\/.*?\/components\/.*\.vue$/, pages)
     },
   },
 })

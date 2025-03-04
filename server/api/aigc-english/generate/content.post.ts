@@ -3,13 +3,12 @@ import { ChatPromptTemplate } from '@langchain/core/prompts'
 import { eq } from 'drizzle-orm'
 import { z } from 'h3-zod'
 import { SystemSettingFieldsEnum, SystemSettingSchema, SystemSettingScopesEnum } from '~/drizzle/schemas'
-import { defineAuthEventHandler } from '~/server/utils/define-auth-event-handler'
 
 const PostSchema = z.object({
   topic: z.string(),
 })
 
-async function generateContent(langchain: LangChainService, topic: string, prompt: string) {
+async function generateContent(langchain: LangChainService, topic: string) {
   const Schema = z.object({
     title: z.object({
       english: z.string().describe('根据主题生成文章对应的英文标题'),
@@ -24,10 +23,14 @@ async function generateContent(langchain: LangChainService, topic: string, promp
   })
 
   const llm = langchain.llm.withStructuredOutput(Schema)
-  const chain = ChatPromptTemplate
-    .fromTemplate(prompt)
-    .pipe(llm)
+  const prompt = ChatPromptTemplate.fromTemplate(`
+    请根据指定的主题生成一篇英语短文，要求生成的内容通顺易懂，不要出现过于复杂的词汇，便于儿童理解。
+    生成的每段内容长度应该在5-12单词之间，不要出现过长的段落。短文的总词汇量应该在150-200词之间。
+    
+    主题为：${topic}。
+  `)
 
+  const chain = prompt.pipe(llm)
   const result = await chain.invoke({
     topic,
   })
@@ -45,7 +48,7 @@ async function generateContent(langchain: LangChainService, topic: string, promp
   }
 }
 
-export default defineAuthEventHandler(async (event) => {
+export default defineEventHandler(async (event) => {
   const { topic } = await useSafeBody(event, PostSchema)
 
   const settings = await db.query.SystemSettingSchema.findMany({
@@ -53,9 +56,8 @@ export default defineAuthEventHandler(async (event) => {
   })
 
   const modelName = settings.find(x => x.key === SystemSettingFieldsEnum.AigcEnglishModel)?.value
-  const modelPrompt = settings.find(x => x.key === SystemSettingFieldsEnum.AigcEnglishPrompt)?.value
 
-  if (!modelName || !modelPrompt) {
+  if (!modelName) {
     throw createError({
       statusCode: 500,
       statusMessage: 'Model or prompt is not found.',
@@ -66,5 +68,5 @@ export default defineAuthEventHandler(async (event) => {
     modelName,
   })
 
-  return generateContent(langchain, topic, modelPrompt)
+  return generateContent(langchain, topic)
 })
