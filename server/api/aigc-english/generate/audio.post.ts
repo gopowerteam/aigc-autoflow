@@ -12,7 +12,6 @@ export default defineAuthEventHandler(async (event) => {
   const speech = useSpeech()
 
   const audio = await speech.synthesizeSpeech(content)
-
   return new Response(audio as ArrayBuffer, {
     headers: {
       'Content-Type': 'audio/wav',

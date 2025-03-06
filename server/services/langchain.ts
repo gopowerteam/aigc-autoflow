@@ -17,7 +17,6 @@ export class LangChainService {
 
   constructor(options: LangChainOptions) {
     this.llm = new ChatOpenAI({
-      verbose: true,
       modelName: options.modelName,
       temperature: options.temperature,
       configuration: {

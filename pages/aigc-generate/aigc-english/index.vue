@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import GenerateAudio from './components/generate-audio.vue'
 import GenerateContent from './components/generate-content.vue'
 // import { useQiniu } from '~/composables/hooks/use-qiniu'
 import GenerateTitle from './components/generate-topic.vue'
+
+const [DefineTemplate, ReuseTemplate] = createReusableTemplate()
 
 // const qiniu = useQiniu()
 
@@ -14,31 +17,25 @@ const steps = [
 
 let topic = $ref<string>('')
 
-const data = ref<{
-  title: {
-    chinese: string
-    english: string
-  }
+const data = reactive<{
+  topic: string
   sentences: {
     chinese: string
     english: string
+    duration?: number
   }[]
   image: string
   audio: string
   video: string
 }>({
-  title: {
-    chinese: '',
-    english: '',
-  },
-  sentences: [],
+  topic: '',
   image: '',
   audio: '',
   video: '',
+  sentences: [],
 })
 
 let currentStep = $ref<number>(-1)
-let currentActive = ref<typeof steps[number]>()
 const taskListeners: { task: string, callback: () => Promise<void> }[] = []
 
 provide(InjectKeys.aigc.english.addTaskListener, (task: string, callback: () => Promise<void>) => {
@@ -59,20 +56,17 @@ definePageMeta({
   },
 })
 
-function onStart(value: string) {
+async function onStart(value: string) {
   topic = value
 
-  nextTick(async () => {
-    for (let i = 0; i < steps.length; i++) {
-      currentStep = i
-      currentActive = steps[i]
-      const task = taskListeners.find(x => x.task === steps[i])
+  for (let i = 0; i < steps.length; i++) {
+    currentStep = i
+    const task = taskListeners.find(x => x.task === steps[i])
 
-      if (task) {
-        await task.callback()
-      }
+    if (task) {
+      await nextTick(() => task.callback())
     }
-  })
+  }
 }
 
 // const form = defineForm([{
@@ -140,21 +134,7 @@ function onStart(value: string) {
 
 //       if (arrayBuffer) {
 //         // 将 ArrayBuffer 解码成 AudioBuffer
-//         const audioBuffer = await audioContext.decodeAudioData(arrayBuffer)
-//         scentance.audioBuffer = audioBuffer
-//         scentance.audioDuration = audioBuffer.duration
-//       }
-//     }
-//   }
-//   catch (ex) {
-//     console.error(ex)
-//   }
-// }
-
-// async function playAudio(audioBuffer: AudioBuffer) {
-//   try {
-//     // 创建音频源
-//     const source = audioContext.createBufferSource()
+//         const audioBuffer = await audioContext.createBufferSource()
 //     source.buffer = audioBuffer
 
 //     // 连接到输出设备
@@ -321,21 +301,38 @@ onMounted(async () => {
 </script>
 
 <template>
+  <DefineTemplate v-slot="{ step }">
+    <div class="flex items-center">
+      <ASpin v-if="currentStep === steps.findIndex(x => x === step)" :size="20" />
+      <i v-if="currentStep > steps.findIndex(x => x === step)" class="icon-park-outline:check-one text-5 text-green-500" />
+    </div>
+  </DefineTemplate>
+
   <div class="absolute inset-0 flex">
     <div class="box-border w-60 p-2">
       <GenerateTitle @submit="onStart" />
     </div>
-    <div class="flex-auto bg-#333 p-10 relative">
-      {{ currentActive }}
-      <ACollapse v-model:active-key="currentActive" v-show="currentStep >= 0" accordion>
-        <ACollapseItem header="生成内容" key="generate-content">
+    <div class="relative flex-auto bg-#333 p-10">
+      <ACollapse v-show="currentStep >= 0">
+        <ACollapseItem key="generate-content" header="生成内容">
           <template #extra>
-            <div class="flex items-center">
-              <ASpin :size="20" v-if="currentStep === steps.findIndex(x => x === 'generate-content')" />
-              <i v-else class="icon-park-outline:check-one text-5 text-green-500" />
-            </div>
+            <ReuseTemplate step="generate-content" />
           </template>
-          <GenerateContent v-model:title="data.title" v-model:sentences="data.sentences" :topic="topic" />
+          <GenerateContent
+            v-model:sentences="data.sentences"
+            :starting="currentStep >= steps.findIndex(x => x === 'generate-content')"
+            :topic="topic"
+          />
+        </ACollapseItem>
+        <ACollapseItem key="generate-audio" header="生成音频">
+          <template #extra>
+            <ReuseTemplate step="generate-audio" />
+          </template>
+          <GenerateAudio
+            v-model:audio="data.audio"
+            v-model:sentences="data.sentences"
+            :starting="currentStep >= steps.findIndex(x => x === 'generate-audio')"
+          />
         </ACollapseItem>
       </ACollapse>
       <div v-show="currentStep < 0">
