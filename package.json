@@ -29,6 +29,8 @@
     "@gopowerteam/table-render": "0.0.149",
     "@langchain/core": "0.3.42",
     "@langchain/openai": "0.4.4",
+    "@leafer-ui/node": "^1.4.2",
+    "@napi-rs/canvas": "^0.1.68",
     "@pinia/nuxt": "0.10.1",
     "@vueuse/core": "12.7.0",
     "@vueuse/nuxt": "12.7.0",

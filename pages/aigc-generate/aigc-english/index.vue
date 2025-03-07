@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import GenerateAudio from './components/generate-audio.vue'
 import GenerateContent from './components/generate-content.vue'
-// import { useQiniu } from '~/composables/hooks/use-qiniu'
+import GenerateImage from './components/generate-image.vue'
 import GenerateTitle from './components/generate-topic.vue'
+// import { useQiniu } from '~/composables/hooks/use-qiniu'
 
 const [DefineTemplate, ReuseTemplate] = createReusableTemplate()
 
@@ -304,7 +305,8 @@ onMounted(async () => {
   <DefineTemplate v-slot="{ step }">
     <div class="flex items-center">
       <ASpin v-if="currentStep === steps.findIndex(x => x === step)" :size="20" />
-      <i v-if="currentStep > steps.findIndex(x => x === step)" class="icon-park-outline:check-one text-5 text-green-500" />
+      <i v-if="currentStep > steps.findIndex(x => x === step)"
+        class="icon-park-outline:check-one text-5 text-green-500" />
     </div>
   </DefineTemplate>
 
@@ -312,29 +314,32 @@ onMounted(async () => {
     <div class="box-border w-60 p-2">
       <GenerateTitle @submit="onStart" />
     </div>
-    <div class="relative flex-auto bg-#333 p-10">
-      <ACollapse v-show="currentStep >= 0">
-        <ACollapseItem key="generate-content" header="生成内容">
-          <template #extra>
-            <ReuseTemplate step="generate-content" />
-          </template>
-          <GenerateContent
-            v-model:sentences="data.sentences"
-            :starting="currentStep >= steps.findIndex(x => x === 'generate-content')"
-            :topic="topic"
-          />
-        </ACollapseItem>
-        <ACollapseItem key="generate-audio" header="生成音频">
-          <template #extra>
-            <ReuseTemplate step="generate-audio" />
-          </template>
-          <GenerateAudio
-            v-model:audio="data.audio"
-            v-model:sentences="data.sentences"
-            :starting="currentStep >= steps.findIndex(x => x === 'generate-audio')"
-          />
-        </ACollapseItem>
-      </ACollapse>
+    <div class="relative flex-auto bg-#333">
+      <div class="absolute inset-0 overflow-auto p-10 box-border">
+        <ACollapse v-show="currentStep >= 0">
+          <ACollapseItem key="generate-content" header="生成内容">
+            <template #extra>
+              <ReuseTemplate step="generate-content" />
+            </template>
+            <GenerateContent v-model:sentences="data.sentences"
+              :starting="currentStep >= steps.findIndex(x => x === 'generate-content')" :topic="topic" />
+          </ACollapseItem>
+          <ACollapseItem key="generate-audio" header="生成音频">
+            <template #extra>
+              <ReuseTemplate step="generate-audio" />
+            </template>
+            <GenerateAudio v-model:audio="data.audio" v-model:sentences="data.sentences"
+              :starting="currentStep >= steps.findIndex(x => x === 'generate-audio')" />
+          </ACollapseItem>
+          <ACollapseItem key="generate-image" header="生成图文">
+            <template #extra>
+              <ReuseTemplate step="generate-image" />
+            </template>
+            <GenerateImage v-model:image="data.image" v-model:sentences="data.sentences"
+              :starting="currentStep >= steps.findIndex(x => x === 'generate-image')" />
+          </ACollapseItem>
+        </ACollapse>
+      </div>
       <div v-show="currentStep < 0">
         <div class="absolute inset-0 flex items-center justify-center">
           <AEmpty>请选择主题后生成短文</AEmpty>

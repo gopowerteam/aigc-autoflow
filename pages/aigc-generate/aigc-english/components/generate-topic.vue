@@ -53,8 +53,8 @@ onMounted(() => {
       </ATabPane>
       <ATabPane key="random" title="随机主题">
         <div class="text-center space-y-4">
-          <ASpin :loading="loading" class="w-full [&>.active]:(bg-red-400 text-#fff)">
-            <div v-for="item in titles" :key="item.chinese" :class="{ active: title === item.chinese }" class="m-2 cursor-pointer rounded-sm bg-#efefef p-2 space-y-1" @click="() => updateTitle(item.chinese)">
+          <ASpin :loading="loading" class="w-full [&>.active]:(border-red-400)">
+            <div v-for="item in titles" :key="item.chinese" :class="{ active: title === item.chinese }" class="m-2 cursor-pointer rounded-sm bg-#efefef p-2 space-y-1  border-solid border-1px border-transparent" @click="() => updateTitle(item.chinese)">
               <div class="text-3.5">
                 {{ item.chinese }}
               </div>

@@ -181,8 +181,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <audio v-if="audio" controls>
-    <source class="w-full" :src="audio" type="audio/wav">
+  <audio v-if="audio" controls class="w-full">
+    <source :src="audio" type="audio/wav">
   </audio>
   <div v-else class="flex items-center justify-center">
     <ASpin v-if="starting" loading tip="音频正在生成中..." />
