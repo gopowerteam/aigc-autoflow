@@ -20,7 +20,7 @@ async function onGenerateImage() {
     }
   })
 
-  image.value = data.url
+  // image.value = data.url
 }
 
 onMounted(() => {

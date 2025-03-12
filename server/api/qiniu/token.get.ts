@@ -1,7 +1,7 @@
 import { nanoid } from 'nanoid'
 import qiniu from 'qiniu'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async () => {
   // 从环境变量获取密钥
   const { qiniu: {
     accessToken,

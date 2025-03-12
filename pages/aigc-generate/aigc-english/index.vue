@@ -3,6 +3,7 @@ import GenerateAudio from './components/generate-audio.vue'
 import GenerateContent from './components/generate-content.vue'
 import GenerateImage from './components/generate-image.vue'
 import GenerateTitle from './components/generate-topic.vue'
+import GenerateVideo from './components/generate-video.vue'
 // import { useQiniu } from '~/composables/hooks/use-qiniu'
 
 const [DefineTemplate, ReuseTemplate] = createReusableTemplate()
@@ -344,6 +345,16 @@ onMounted(async () => {
             <GenerateImage
               v-model:image="data.image" v-model:sentences="data.sentences"
               :starting="currentStep >= steps.findIndex(x => x === 'generate-image')"
+            />
+          </ACollapseItem>
+          <ACollapseItem key="generate-video" header="生成视频">
+            <template #extra>
+              <ReuseTemplate step="generate-video" />
+            </template>
+            <GenerateVideo
+              :audio="data.audio" 
+              :sentences="data.sentences"
+              :starting="currentStep >= steps.findIndex(x => x === 'generate-video')"
             />
           </ACollapseItem>
         </ACollapse>

@@ -1,4 +1,6 @@
 <script setup lang="tsx">
+import dayjs from '#build/dayjs.imports.mjs'
+
 const { starting } = defineProps<{
   starting: boolean
 }>()
@@ -11,6 +13,7 @@ const sentences = defineModel<{
   duration?: number
 }[]>('sentences')
 
+const qiniu = useQiniu()
 const audio = defineModel<string>()
 const sentenceAduios: AudioBuffer[] = []
 const addTaskListener = inject(InjectKeys.aigc.english.addTaskListener)
@@ -25,6 +28,7 @@ async function onGenerateAudio() {
     // 生成的语音
     for (let index = 0; index < sentences.value!.length; index++) {
       const sentence = sentences.value![index]
+
       const arrayBuffer = await $request('/api/aigc-english/generate/audio', {
         method: 'POST',
         responseType: 'arrayBuffer',
@@ -49,7 +53,7 @@ async function onGenerateAudio() {
       const audioBuffer = mergeAudioBuffers(sentenceAduios)
       const audioBlob = audioBufferToBlob(audioBuffer)
 
-      audio.value = URL.createObjectURL(audioBlob)
+      audio.value = await qiniu.upload(new File([audioBlob], `${dayjs().format('YYYY-MM-DD HH:mm:ss')}.wav`))
     }
   }
   catch (ex) {

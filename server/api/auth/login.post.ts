@@ -1,7 +1,7 @@
 import { and, eq } from 'drizzle-orm'
 import { z } from 'h3-zod'
 import { SystemSettingFieldsEnum, SystemSettingSchema } from '~/drizzle/schemas'
-import { useSafeBody } from '~/server/utils/use-safe-validate'
+import { useSafeBody } from '~/server/hooks/use-safe-validate'
 
 const Schema = z.object({
   username: z.string(),

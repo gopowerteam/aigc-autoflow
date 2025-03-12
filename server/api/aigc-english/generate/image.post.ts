@@ -3,6 +3,7 @@ import { Leafer, Line, Rect, Text, useCanvas } from '@leafer-ui/node'
 import napi, { GlobalFonts } from '@napi-rs/canvas'
 import { z } from 'h3-zod'
 import { getRootPath } from '~/server/utils/path'
+import { useSafeBody } from '~/server/hooks/use-safe-validate'
 
 useCanvas('napi', napi)
 

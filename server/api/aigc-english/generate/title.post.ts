@@ -3,6 +3,7 @@ import { ChatPromptTemplate } from '@langchain/core/prompts'
 import { eq } from 'drizzle-orm'
 import { z } from 'h3-zod'
 import { SystemSettingFieldsEnum, SystemSettingSchema, SystemSettingScopesEnum } from '~/drizzle/schemas'
+import { useLangchain } from '~/server/hooks/use-langchain'
 
 async function generateTitles(langchain: LangChainService) {
   const Schema = z.object({
