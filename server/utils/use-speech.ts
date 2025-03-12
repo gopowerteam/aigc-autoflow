@@ -38,9 +38,13 @@ export function synthesizeSpeech(content: string) {
       speechSynthesizer.speakTextAsync(
         content,
         (result) => {
-          if (result) {
-            speechSynthesizer.close()
+          speechSynthesizer.close()
+
+          if (result && result.audioData) {
             resolve(result.audioData)
+          }
+          else {
+            reject(result.errorDetails)
           }
         },
         (ex) => {

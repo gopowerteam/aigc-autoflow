@@ -1,8 +1,8 @@
 import path from 'node:path'
-import { Image, Leafer, Line, Platform, Rect, Text, useCanvas } from '@leafer-ui/node'
+import { Leafer, Line, Rect, Text, useCanvas } from '@leafer-ui/node'
 import napi, { GlobalFonts } from '@napi-rs/canvas'
-import { getRootPath } from '~/server/utils/path'
 import { z } from 'h3-zod'
+import { getRootPath } from '~/server/utils/path'
 
 useCanvas('napi', napi)
 
@@ -55,7 +55,7 @@ function drawBackground(leafer: Leafer, width: number, height: number) {
     const line = new Line({
       points: [0, i, width, i],
       strokeWidth: 1,
-      stroke: 'rgb(245 245 245)'
+      stroke: 'rgb(245 245 245)',
     })
 
     leafer.add(line)
@@ -65,12 +65,11 @@ function drawBackground(leafer: Leafer, width: number, height: number) {
     const line = new Line({
       points: [i, 0, i, height],
       strokeWidth: 1,
-      stroke: 'rgb(245 245 245)'
+      stroke: 'rgb(245 245 245)',
     })
 
     leafer.add(line)
   }
-
 }
 
 function drawTitle(leafer: Leafer, title: { chinese: string, english: string }) {
@@ -83,7 +82,7 @@ function drawTitle(leafer: Leafer, title: { chinese: string, english: string }) 
     fontFamily,
     textAlign: 'center',
     fontSize: englishTitleHeight,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   })
   const chinese = new Text({
     x: 0,
@@ -148,6 +147,6 @@ export default defineEventHandler(async (event) => {
   const image = await drawImage(sentences)
 
   return {
-    url: image
+    url: image,
   }
 })

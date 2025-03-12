@@ -48,7 +48,7 @@ provide(InjectKeys.aigc.english.addTaskListener, (task: string, callback: () => 
 
 definePageMeta({
   title: '英语短文',
-  requireAuth: true,
+  requireAuth: false,
   name: 'aigc-generate.aigc-english',
   menu: {
     key: 'aigc-english',
@@ -305,8 +305,10 @@ onMounted(async () => {
   <DefineTemplate v-slot="{ step }">
     <div class="flex items-center">
       <ASpin v-if="currentStep === steps.findIndex(x => x === step)" :size="20" />
-      <i v-if="currentStep > steps.findIndex(x => x === step)"
-        class="icon-park-outline:check-one text-5 text-green-500" />
+      <i
+        v-if="currentStep > steps.findIndex(x => x === step)"
+        class="icon-park-outline:check-one text-5 text-green-500"
+      />
     </div>
   </DefineTemplate>
 
@@ -315,28 +317,34 @@ onMounted(async () => {
       <GenerateTitle @submit="onStart" />
     </div>
     <div class="relative flex-auto bg-#333">
-      <div class="absolute inset-0 overflow-auto p-10 box-border">
+      <div class="absolute inset-0 box-border overflow-auto p-10">
         <ACollapse v-show="currentStep >= 0">
           <ACollapseItem key="generate-content" header="生成内容">
             <template #extra>
               <ReuseTemplate step="generate-content" />
             </template>
-            <GenerateContent v-model:sentences="data.sentences"
-              :starting="currentStep >= steps.findIndex(x => x === 'generate-content')" :topic="topic" />
+            <GenerateContent
+              v-model:sentences="data.sentences"
+              :starting="currentStep >= steps.findIndex(x => x === 'generate-content')" :topic="topic"
+            />
           </ACollapseItem>
           <ACollapseItem key="generate-audio" header="生成音频">
             <template #extra>
               <ReuseTemplate step="generate-audio" />
             </template>
-            <GenerateAudio v-model:audio="data.audio" v-model:sentences="data.sentences"
-              :starting="currentStep >= steps.findIndex(x => x === 'generate-audio')" />
+            <GenerateAudio
+              v-model:audio="data.audio" v-model:sentences="data.sentences"
+              :starting="currentStep >= steps.findIndex(x => x === 'generate-audio')"
+            />
           </ACollapseItem>
           <ACollapseItem key="generate-image" header="生成图文">
             <template #extra>
               <ReuseTemplate step="generate-image" />
             </template>
-            <GenerateImage v-model:image="data.image" v-model:sentences="data.sentences"
-              :starting="currentStep >= steps.findIndex(x => x === 'generate-image')" />
+            <GenerateImage
+              v-model:image="data.image" v-model:sentences="data.sentences"
+              :starting="currentStep >= steps.findIndex(x => x === 'generate-image')"
+            />
           </ACollapseItem>
         </ACollapse>
       </div>

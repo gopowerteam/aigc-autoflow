@@ -16,6 +16,11 @@ const sentenceAduios: AudioBuffer[] = []
 const addTaskListener = inject(InjectKeys.aigc.english.addTaskListener)
 
 async function onGenerateAudio() {
+  if (!sentences.value!.length) {
+    console.warn('No sentences available to generate audio.')
+    return
+  }
+
   try {
     // 生成的语音
     for (let index = 0; index < sentences.value!.length; index++) {
@@ -28,19 +33,24 @@ async function onGenerateAudio() {
         },
       }) as ArrayBuffer
 
-      if (arrayBuffer) {
+      if (arrayBuffer && arrayBuffer?.byteLength > 0) {
         // 将 ArrayBuffer 解码成 AudioBuffer
         const audioBuffer = await audioContext.decodeAudioData(arrayBuffer)
         sentenceAduios.push(audioBuffer)
         sentence.duration = audioBuffer.duration
       }
+      else {
+        console.error('Failed to generate audio for sentence:', sentence)
+      }
     }
 
-    // 合并生成语音
-    const audioBuffer = mergeAudioBuffers(sentenceAduios)
-    const audioBlob = audioBufferToBlob(audioBuffer)
+    if (sentenceAduios.length) {
+      // 合并生成语音
+      const audioBuffer = mergeAudioBuffers(sentenceAduios)
+      const audioBlob = audioBufferToBlob(audioBuffer)
 
-    audio.value = URL.createObjectURL(audioBlob)
+      audio.value = URL.createObjectURL(audioBlob)
+    }
   }
   catch (ex) {
     console.error(ex)
