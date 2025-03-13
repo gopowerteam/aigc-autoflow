@@ -17,9 +17,7 @@ RUN apk add --no-cache nodejs npm curl gcc g++ make linux-headers pkgconfig \
     && node --version \
     && pnpm --version
 
-RUN apk add --no-cache python3 --repository=http://dl-cdn.alpinelinux.org/alpine/v3.19/main
-RUN python3 -m ensurepip
-RUN pip3 install --no-cache --upgrade pip setuptools
+RUN apk add --no-cache python3 py3-pip py3-setuptools --repository=http://dl-cdn.alpinelinux.org/alpine/v3.19/main
 
 # STEP2: 构建依赖镜像
 FROM base as build
