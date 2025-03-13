@@ -18,7 +18,7 @@ RUN apk add --no-cache nodejs npm curl gcc g++ make linux-headers pkgconfig \
     && pnpm --version
 
 RUN apk add --no-cache python3 py3-pip py3-setuptools pixman --repository=http://dl-cdn.alpinelinux.org/alpine/v3.19/main
-
+RUN pip install setuptools wheel
 # STEP2: 构建依赖镜像
 FROM base as build
 # -安装依赖
