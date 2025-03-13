@@ -2,8 +2,8 @@ import path from 'node:path'
 import { Leafer, Line, Rect, Text, useCanvas } from '@leafer-ui/node'
 import napi, { GlobalFonts } from '@napi-rs/canvas'
 import { z } from 'h3-zod'
-import { getRootPath } from '~/server/utils/path'
 import { useSafeBody } from '~/server/hooks/use-safe-validate'
+import { getRootPath } from '~/server/utils/path'
 
 useCanvas('napi', napi)
 
@@ -140,7 +140,7 @@ async function drawImage(sentences: { chinese: string, english: string }[]) {
   drawContent(leafer, content)
 
   const result = await leafer.export('png', { pixelRatio: 2 })
-  return result.data
+  return result.data as string
 }
 
 export default defineEventHandler(async (event) => {

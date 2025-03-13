@@ -36,7 +36,7 @@
     "@vueuse/nuxt": "12.7.0",
     "drizzle-orm": "0.40.0",
     "drizzle-zod": "0.7.0",
-    "ffcreatorlite": "^2.5.1",
+    "ffcreator": "^7.5.8",
     "h3-zod": "0.5.3",
     "jsonwebtoken": "9.0.2",
     "microsoft-cognitiveservices-speech-sdk": "1.42.0",
@@ -82,8 +82,22 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
+      "@ffmpeg-installer/darwin-arm64",
+      "@ffmpeg-installer/darwin-x64",
+      "@ffmpeg-installer/linux-arm",
+      "@ffmpeg-installer/linux-arm64",
+      "@ffmpeg-installer/linux-ia32",
+      "@ffmpeg-installer/linux-x64",
+      "@ffprobe-installer/darwin-arm64",
+      "@ffprobe-installer/darwin-x64",
+      "@ffprobe-installer/linux-arm",
+      "@ffprobe-installer/linux-arm64",
+      "@ffprobe-installer/linux-ia32",
+      "@ffprobe-installer/linux-x64",
       "@parcel/watcher",
+      "canvas",
       "esbuild",
+      "gl",
       "vue-demi"
     ]
   }

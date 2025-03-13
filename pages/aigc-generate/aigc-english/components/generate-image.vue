@@ -1,5 +1,4 @@
 <script setup lang="tsx">
-
 const { starting } = defineProps<{
   starting: boolean
 }>()
@@ -16,11 +15,11 @@ async function onGenerateImage() {
   const data = await $request('/api/aigc-english/generate/image', {
     method: 'POST',
     body: {
-      sentences: sentences.value
-    }
+      sentences: sentences.value,
+    },
   })
 
-  // image.value = data.url
+  image.value = data.url as string
 }
 
 onMounted(() => {

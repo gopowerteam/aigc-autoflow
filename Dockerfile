@@ -1,8 +1,8 @@
 # STEP1: 构建基础镜像
 FROM alpine:3.20 as base
 # -设置环境变量
-ENV NODE_VERSION=20.13.0
-ENV PNPM_VERSION=9.6.0
+ENV NODE_VERSION=20.18.3
+ENV PNPM_VERSION=10.5.2
 
 # -设置工作目录
 WORKDIR /app

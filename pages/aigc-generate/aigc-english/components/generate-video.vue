@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 const { audio, sentences, starting } = defineProps<{
   starting: boolean
   audio: string
@@ -11,7 +10,7 @@ const { audio, sentences, starting } = defineProps<{
 }>()
 
 const loading = ref(true)
-const video = ref<string>()
+const video = defineModel<string>('video')
 
 const addTaskListener = inject(InjectKeys.aigc.english.addTaskListener)
 
@@ -22,23 +21,23 @@ async function onGenerateVideo() {
     method: 'POST',
     body: {
       audio,
-      sentences
+      sentences,
     },
   }).finally(() => {
     loading.value = false
   })
 
-
   if (result?.url) {
     video.value = result.url
-  } else {
+  }
+  else {
     console.error('Failed to generate video:', result)
   }
 }
 
 onMounted(() => {
   if (addTaskListener) {
-    addTaskListener('generate-videos', onGenerateVideo)
+    addTaskListener('generate-video', onGenerateVideo)
   }
 })
 </script>
@@ -52,14 +51,7 @@ onMounted(() => {
   </div>
 
   <div v-else class="text-center space-y-2">
-    <div v-for="(sentence, index) in sentences" :key="index">
-      <div class="text-3.5">
-        {{ sentence.chinese }}
-      </div>
-      <div class="text-3.5">
-        {{ sentence.english }}
-      </div>
-    </div>
+    <video v-if="video" class="py-2" controls :src="video" />
   </div>
 </template>
 

@@ -1,3 +1,4 @@
+import type { Buffer } from 'node:buffer'
 import { nanoid } from 'nanoid'
 import qiniu from 'qiniu'
 
@@ -39,7 +40,7 @@ class Qiniu {
     }
   }
 
-  async upload(buffer: ArrayBuffer): Promise<string> {
+  async upload(buffer: Buffer<ArrayBufferLike>): Promise<string> {
     const { token, key, url } = await this.generateToken()
 
     const formUploader = new qiniu.form_up.FormUploader()

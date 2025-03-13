@@ -54,7 +54,7 @@ onMounted(() => {
       <ATabPane key="random" title="随机主题">
         <div class="text-center space-y-4">
           <ASpin :loading="loading" class="w-full [&>.active]:(border-red-400)">
-            <div v-for="item in titles" :key="item.chinese" :class="{ active: title === item.chinese }" class="m-2 cursor-pointer rounded-sm bg-#efefef p-2 space-y-1  border-solid border-1px border-transparent" @click="() => updateTitle(item.chinese)">
+            <div v-for="item in titles" :key="item.chinese" :class="{ active: title === item.chinese }" class="m-2 cursor-pointer border-1px border-transparent rounded-sm border-solid bg-#efefef p-2 space-y-1" @click="() => updateTitle(item.chinese)">
               <div class="text-3.5">
                 {{ item.chinese }}
               </div>
@@ -75,41 +75,6 @@ onMounted(() => {
       </ATabPane>
     </ATabs>
   </div>
-  <!-- <div class="w-4/5 space-y-4">
-    <div class="text-center">
-      <a-radio-group v-model="mode" type="button">
-        <a-radio value="custom">
-          自定义标题
-        </a-radio>
-        <a-radio value="random">
-          选择标题
-        </a-radio>
-      </a-radio-group>
-    </div>
-    <div>
-      <div v-if="mode === 'custom'">
-        <AInput v-model="title" />
-      </div>
-      <div v-if="mode === 'random'">
-        <AInput v-model="title" />
-      </div>
-    </div>
-  </div> -->
-  <!-- <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-      <a-card
-        v-for="title in titles" :key="title.english" class="cursor-pointer transition-shadow hover:shadow-lg"
-        :hoverable="true" @click="handleTitleSelect(title)"
-      >
-        <div class="space-y-2">
-          <div class="text-base font-medium">
-            {{ title.english }}
-          </div>
-          <div class="text-sm text-gray-600">
-            {{ title.chinese }}
-          </div>
-        </div>
-      </a-card>
-    </div> -->
 </template>
 
 <style lang="scss" scope>

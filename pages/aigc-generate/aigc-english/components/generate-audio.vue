@@ -12,9 +12,9 @@ const sentences = defineModel<{
   english: string
   duration?: number
 }[]>('sentences')
+const audio = defineModel<string>('audio')
 
 const qiniu = useQiniu()
-const audio = defineModel<string>()
 const sentenceAduios: AudioBuffer[] = []
 const addTaskListener = inject(InjectKeys.aigc.english.addTaskListener)
 
@@ -119,11 +119,6 @@ function audioBufferToBlob(audioBuffer: AudioBuffer): Blob {
 
   // 合并文件头和音频数据
   return new Blob([wavHeader, pcmData], { type: 'audio/wav' })
-
-  // // 创建唯一文件名
-  // const filename = `audio-${Date.now()}.wav`
-
-  // return new File([wavBlob], filename, { type: 'audio/wav' })
 }
 
 /**
@@ -162,28 +157,6 @@ function createWavHeader(length: number, numberOfChannels: number, sampleRate: n
 
   return buffer
 }
-
-// async function playAudio(audioBuffer: AudioBuffer) {
-//   try {
-//     // 创建音频源
-//     const source = audioContext.createBufferSource()
-//     source.buffer = audioBuffer
-
-//     // 连接到输出设备
-//     source.connect(audioContext.destination)
-
-//     // 开始播放
-//     source.start(0)
-
-//     // 监听播放结束
-//     source.onended = () => {
-//       // console.log('音频播放完成')
-//     }
-//   }
-//   catch (error) {
-//     console.error('音频播放失败:', error)
-//   }
-// }
 
 onMounted(() => {
   audioContext = new AudioContext()
