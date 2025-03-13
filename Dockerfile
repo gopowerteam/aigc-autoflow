@@ -17,7 +17,7 @@ RUN apk add --no-cache nodejs npm curl gcc g++ make linux-headers \
     && node --version \
     && pnpm --version
 
-RUN apk add --no-cache python3=~3.11
+RUN apk add --no-cache python3=~3.11 --repository=http://dl-cdn.alpinelinux.org/alpine/edge/main
 
 # STEP2: 构建依赖镜像
 FROM base as build
