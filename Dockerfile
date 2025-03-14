@@ -31,6 +31,6 @@ COPY --from=build /app/node_modules /app/node_modules
 RUN rm -rf .env
 
 EXPOSE 3000
-CMD [ "xvfb-run", "-s -ac -screen 0 1280x1024x24", "npm", "run", "start" ]
+CMD [ "xvfb-run", '-s "-ac -screen 0 1280x1024x24"', "npm", "run", "start" ]
 
 
