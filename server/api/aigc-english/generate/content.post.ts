@@ -3,8 +3,8 @@ import { ChatPromptTemplate } from '@langchain/core/prompts'
 import { eq } from 'drizzle-orm'
 import { z } from 'h3-zod'
 import { SystemSettingFieldsEnum, SystemSettingSchema, SystemSettingScopesEnum } from '~/drizzle/schemas'
-import { useSafeBody } from '~/server/hooks/use-safe-validate'
 import { useLangchain } from '~/server/hooks/use-langchain'
+import { useSafeBody } from '~/server/hooks/use-safe-validate'
 
 const PostSchema = z.object({
   topic: z.string(),
