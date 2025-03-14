@@ -1,26 +1,25 @@
 # STEP1: 构建基础镜像
-FROM alpine:3.20 as base
+FROM node:20-slim AS base
 # -设置环境变量
-ENV NODE_VERSION=20.18.3
 ENV PNPM_VERSION=10.5.2
 
 # -设置工作目录
 WORKDIR /app
 # -复制依赖相关目录
 COPY . .
-# 安装基础包
-# RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories \
-#     && apk add --no-cache nodejs npm python3 curl gcc g++ make linux-headers \
-#     && npm install -g pnpm@$PNPM_VERSION --registry=https://registry.npmmirror.com \
-RUN apk add --no-cache nodejs npm curl gcc g++ make linux-headers pkgconfig \
-    && npm install -g pnpm@$PNPM_VERSION \
+
+RUN sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list.d/debian.sources \
+    && apt-get update
+
+RUN apt-get install curl gcc g++ cmake python3 libcairo2-dev libjpeg-dev libpango1.0-dev libgif-dev build-essential libgl1-mesa-dev xvfb libxi-dev libx11-dev -y \
+    && npm install -g pnpm@$PNPM_VERSION --registry=https://registry.npmmirror.com \
     && node --version \
     && pnpm --version
 
-RUN apk add --no-cache python3 py3-pip py3-setuptools pixman --repository=http://dl-cdn.alpinelinux.org/alpine/v3.19/main
-RUN pip install setuptools wheel
+RUN ln -sf /usr/bin/python3 /usr/bin/python
+
 # STEP2: 构建依赖镜像
-FROM base as build
+FROM base AS build
 # -安装依赖
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 # -开始构建
