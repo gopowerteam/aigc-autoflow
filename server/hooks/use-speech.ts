@@ -15,7 +15,9 @@ function getSpeechSynthesizer() {
     _audioPlayer.close()
   }
 
-  console.error(JSON.stringify(azure))
+  console.error(
+    JSON.stringify(azure),
+  )
 
   const speechConfig = SpeechConfig.fromSubscription(
     azure.subscriptionKey,
