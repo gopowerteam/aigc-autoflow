@@ -8,10 +8,9 @@ WORKDIR /app
 # -复制依赖相关目录
 COPY . .
 
-# RUN sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list.d/debian.sources \
-#     && apt-get update
-
-RUN apt-get install curl gcc g++ cmake python3 libcairo2-dev libjpeg-dev libpango1.0-dev libgif-dev build-essential libgl1-mesa-dev xvfb libxi-dev libx11-dev -y \
+RUN sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list.d/debian.sources \
+    && apt-get update \
+    && apt-get install curl gcc g++ cmake python3 libcairo2-dev libjpeg-dev libpango1.0-dev libgif-dev build-essential libgl1-mesa-dev xvfb libxi-dev libx11-dev -y \
     && npm install -g pnpm@$PNPM_VERSION --registry=https://registry.npmmirror.com \
     && node --version \
     && pnpm --version
