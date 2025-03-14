@@ -1,0 +1,14 @@
+{
+  "apps": [{
+    "name": "aigc-autoflow",
+    "script": ".output/server/index.mjs",
+    "env": {
+      "DISPLAY": ":99"
+    }
+  }, {
+    "name": "Xvfb",
+    "interpreter": "none",
+    "script": "Xvfb",
+    "args": ":99 -ac -screen 0 1280x1024x24"
+  }]
+}

@@ -10,8 +10,8 @@ COPY . .
 
 RUN sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list.d/debian.sources \
     && apt-get update \
-    && apt-get install curl gcc g++ cmake ffmpeg python3 libcairo2-dev libjpeg-dev libpango1.0-dev libgif-dev build-essential libgl1-mesa-dev xvfb libxi-dev libx11-dev -y \
-    && npm install -g pnpm@$PNPM_VERSION --registry=https://registry.npmmirror.com \
+    && apt-get install curl gcc g++ cmake ffmpeg python3 libcairo2-dev libjpeg-dev libpango1.0-dev libgif-dev build-essential libgl1-mesa-dev xvfb libxi-dev libxinerama-dev libx11-dev -y \
+    && npm install -g pm2 pnpm@$PNPM_VERSION --registry=https://registry.npmmirror.com \
     && node --version \
     && pnpm --version
 
@@ -31,5 +31,6 @@ COPY --from=build /app/node_modules /app/node_modules
 RUN rm -rf .env
 
 EXPOSE 3000
-CMD xvfb-run -s "-ac -screen 0 1280x1024x24" node .output/server/index.mjs
+CMD ["pm2-runtime", "start", "process.json"]
+
 
