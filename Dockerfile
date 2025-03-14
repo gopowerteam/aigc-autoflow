@@ -30,7 +30,7 @@ COPY --from=build /app/.output /app/.output
 COPY --from=build /app/node_modules /app/node_modules
 RUN rm -rf .env
 
+ENTRYPOINT ["pm2-runtime", "start", "process.json"]
 EXPOSE 3000
-CMD ["pm2-runtime", "start", "process.json"]
 
 
