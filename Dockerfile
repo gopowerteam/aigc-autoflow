@@ -18,6 +18,7 @@ RUN dnf install -y --nogpgcheck https://mirrors.rpmfusion.org/nonfree/el/rpmfusi
 RUN dnf install -y git ffmpeg
 RUN dnf install -y gcc-c++ cairo-devel pango-devel libjpeg-turbo-devel giflib-devel
 RUN dnf install -y mesa-dri-drivers Xvfb libXi-devel libXinerama-devel libX11-devel
+RUN dnf install -y mesa-libGL-devel mesa-libGLU-devel freeglut-devel
 RUN npm install -g pm2 pnpm@$PNPM_VERSION
 
 # RUN sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list.d/debian.sources \
