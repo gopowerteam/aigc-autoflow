@@ -13,8 +13,11 @@ RUN dnf install -y langpacks-en glibc-langpack-en
 ENV LANG="en_US.UTF-8"
 
 RUN dnf module install -y nodejs:20/minimal
-RUN dnf install -y --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-9.noarch.rpm
-RUN dnf install -y --nogpgcheck https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-9.noarch.rpm
+RUN dnf install -y --nogpgcheck https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
+RUN dnf install -y --nogpgcheck https://dl.fedoraproject.org/pub/epel/epel-next-release-latest-9.noarch.rpm
+RUN dnf config-manager --enable epel,epel-next,crb
+RUN dnf install -y https://download1.rpmfusion.org/free/el/rpmfusion-free-release-9.noarch.rpm
+RUN dnf install -y https://download1.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-9.noarch.rpm
 RUN dnf install -y git ffmpeg
 RUN dnf install -y gcc-c++ cairo-devel pango-devel libjpeg-turbo-devel giflib-devel
 RUN dnf install -y mesa-dri-drivers Xvfb libXi-devel libXinerama-devel libX11-devel
